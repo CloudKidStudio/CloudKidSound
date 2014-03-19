@@ -1,3 +1,0 @@
-SoundJS/lib/soundjs-0.5.0.min.js
-PreloadJS/lib/preloadjs-0.3.2.min.js
-CloudKidOS/deploy/cloudkid-os-createjs.min.js
