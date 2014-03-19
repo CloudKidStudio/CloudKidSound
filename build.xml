@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<project name="CloudKidSound" default="build-all" basedir="./">
+	<property file="${os.name}.build.properties"/>
+	<property file="build.properties"/>
+	
+	<macrodef name="uglifyjs">
+		<attribute name="options" default="-m" />
+		<attribute name="debug" default="false" />
+		<attribute name="compress" default="" />
+		<attribute name="output" />
+		<sequential>
+			<fail unless="source.order" message="version needs to be specified in the build.properties as the output directory" />
+			<fail unless="source.dir" message="The folder that contains all the source" />
+			<fail unless="compressor" message="Path to the uglify-js program" />
+			<jshint list="${source.order}" dir="${source.dir}" />
+			<echo message="+---------------------------------+" />
+			<echo message="| Building the Library JavaScript |" />
+			<echo message="+---------------------------------+" />
+			<resourcelist id="files"> 
+				<file file="${source.order}" />
+				<filterchain>
+					<prefixlines prefix="${source.dir}/" /> 
+				</filterchain>
+			</resourcelist>
+		    <pathconvert property="allFiles" refid="files" pathsep=" " />
+			<exec executable="${compressor}" failonerror="true">
+				<arg line="${allFiles}" />
+				<arg line="-o @{output}" />
+				<arg line="@{options}" />
+				<arg line="-c @{compress}" />
+				<arg line="--define DEBUG=@{debug},RELEASE=!@{debug}" />
+			</exec>
+			<replaceregexp file="@{output}" match="\$\{version\}" replace="${version}" flags="g" />
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="jshint">
+		<attribute name="list" />
+		<attribute name="dir" />
+		<sequential>
+			<fail unless="js.validator" message="js.validator needs to be specified in the build.properties as the JSHint or similar lint app" />
+			<echo message="+--------------------------+" />
+			<echo message="| Validating the JS Source |" />
+			<echo message="+--------------------------+" />
+			<loadfile property="files" srcFile="@{list}">
+				<filterchain>
+					<prefixlines prefix=" @{dir}/" />
+					<striplinebreaks />
+					<trim />
+				</filterchain>
+			</loadfile>
+			<exec executable="${js.validator}">
+	            <arg line="${files}" />
+	        </exec>
+		</sequential>
+	</macrodef>
+	
+	<target name="build-debug" description="Compile JS project in debug mode">
+		<uglifyjs output="${output.debug}" debug="true" options="-b" />
+	</target>
+	
+	<target name="build-release" description="Compile JS project in release mode">
+		<uglifyjs output="${output.min}" />
+	</target>
+	
+	<target name="build-uncompressed" description="Compile JS project with the docs">
+		<concat-source output="${output.docs}" dir="${source.dir}" order="${source.order}" />
+		<replaceregexp file="${output.docs}" match="\( ?RELEASE ?\)" replace="(false)" flags="g" />
+		<replaceregexp file="${output.docs}" match="\( ?DEBUG ?\)" replace="(true)" flags="g" />
+	</target>
+	
+	<target name="build-all" description="Compile the Minified, Debug and Uncompressed versions of the library">
+		<antcall target="build-debug" />
+		<antcall target="build-release" />
+		<antcall target="build-uncompressed" />
+	</target>
+	
+	<macrodef name="concat-source">
+		<attribute name="output" />
+		<attribute name="dir" />
+		<attribute name="order" />
+		<sequential>
+			<concat destfile="@{output}" encoding="UTF-8" outputencoding="UTF-8" fixlastline="true">
+			     <resourcelist> 
+					<file file="@{order}" />
+					<filterchain>
+						<prefixlines prefix="@{dir}/" /> 
+					</filterchain>
+				</resourcelist>
+			</concat>
+		</sequential>
+	</macrodef>
+	
+	<target name="import-libs" description="Copy the files specified in dependencies.txt to libs.dir">
+		<fail unless="libs.dir" message="libs.dir needs to be specified in build.properties as the location to put external library SWC files" />
+		<fail unless="libs.root.dir" message="libs.root.dir needs to be specified in build.properties as the root directory that all external libraries are in" />
+		<fail unless="libs.imports" message="libs.imports needs to be specified in build.properties as the directory to output built files to" />
+		<copy todir="${libs.dir}" flatten="true" overwrite="true">
+			<fileset dir="${libs.root.dir}">
+				<patternset>
+					<includesfile name="${libs.imports}" />
+				</patternset>
+			</fileset>
+		</copy>
+	</target>
+	
+	<macrodef name="docs-config">
+		<attribute name="template" default="${docs.config}" />
+		<attribute name="file" default="temp.json" />
+		<sequential>
+			<copy file="@{template}" tofile="@{file}" overwrite="true" />
+			<replaceregexp file="@{file}" match="\$\{docs\.description\}" replace="${docs.description}" flags="g" />
+			<replaceregexp file="@{file}" match="\$\{docs\.name\}" replace="${docs.name}" flags="g" />
+			<replaceregexp file="@{file}" match="\$\{version\}" replace="${version}" flags="g" />
+			<replaceregexp file="@{file}" match="\$\{docs\.outdir\}" replace="${docs.outdir}" flags="g" />
+			<replaceregexp file="@{file}" match="\$\{docs\.logo\}" replace="${docs.logo}" flags="g" />
+		</sequential>
+	</macrodef>
+		
+	<macrodef name="docs-cleanup">
+		<attribute name="file" default="temp.json" />
+		<sequential>
+			<delete file="@{file}" />
+			<delete dir="${docs.outdir}" />
+		</sequential>
+	</macrodef>
+	
+	<target name="docs" description="Use YUIDoc to build the documentation for this library.">
+		<docs-config />
+		<exec executable="${docs}">
+			<arg line="${source.dir}" />
+			<arg line="--config temp.json" />
+		</exec>
+		<copy toDir="${docs.dir}" overwrite="true">
+		    <fileset dir="${docs.outdir}" />
+		</copy>
+		<docs-cleanup />
+	</target>
+
+	<target name="docs-server" description="Set up a server to show a real-time preview of the docs page.  Visit http://127.0.0.1:3000/ and refresh to see changes">
+		<docs-config />
+		<exec executable="${docs}">
+			<arg line="--server" />
+			<arg line="--config temp.json" />
+			<arg line="${source.dir}" />
+		</exec>
+		<docs-cleanup />
+	</target>
+</project>

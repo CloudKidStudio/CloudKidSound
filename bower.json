@@ -1,0 +1,18 @@
+{
+    "name": "cloudkid-sound",
+    "version": "1.0.0",
+    "main": "deploy/cloudkid-sound.min.js",
+    "dependencies": {
+        "cloudkid-os" : "*"
+    },
+    "ignore": [
+        "build.xml",
+        "build.properties",
+        "example",
+        "docs",
+        "libs",
+        "dependencies.txt",
+        "src",
+        "src.order"
+    ]
+}
