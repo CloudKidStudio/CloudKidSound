@@ -121,7 +121,6 @@
 		<attribute name="file" default="temp.json" />
 		<sequential>
 			<delete file="@{file}" />
-			<delete dir="${docs.outdir}" />
 		</sequential>
 	</macrodef>
 	
