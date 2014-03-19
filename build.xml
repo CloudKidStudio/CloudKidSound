@@ -131,10 +131,7 @@
 			<arg line="${source.dir}" />
 			<arg line="--config temp.json" />
 		</exec>
-		<copy toDir="${docs.dir}" overwrite="true">
-		    <fileset dir="${docs.outdir}" />
-		</copy>
-		<copy toDir="${docs.dir}" file="${docs.logo}" overwrite="true" />
+		<copy toDir="${docs.outdir}" file="${docs.logo}" overwrite="true" />
 		<docs-cleanup />
 	</target>
 
