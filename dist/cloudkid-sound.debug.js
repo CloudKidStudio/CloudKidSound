@@ -306,7 +306,7 @@
     }, p.stop = function() {
         this._currentAudio && (cloudkid.Sound.instance.stop(this._currentAudio), this._currentAudio = null, 
         this._callback = null), this.captions && this.captions.stop(), cloudkid.OS.instance.removeUpdateCallback("VOPlayer"), 
-        this.audioList = null;
+        this.audioList = null, this._timer = 0;
     }, p.unloadPlayedAudio = function() {
         cloudkid.Sound.instance.unload(this._playedAudio), this._playedAudio = null;
     }, p.destroy = function() {

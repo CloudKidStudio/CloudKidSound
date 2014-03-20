@@ -1421,6 +1421,7 @@
 			this.captions.stop();
 		cloudkid.OS.instance.removeUpdateCallback("VOPlayer");
 		this.audioList = null;
+		this._timer = 0;
 	};
 
 	/**
