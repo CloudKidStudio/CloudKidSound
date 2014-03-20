@@ -1,6 +1,12 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
-    "classes": [],
+    "classes": [
+        "SoundContext",
+        "SoundInst",
+        "SoundListTask",
+        "cloudkid.Sound",
+        "cloudkid.VOPlayer"
+    ],
     "modules": [],
     "allModules": []
 } };
