@@ -295,23 +295,23 @@
         var s = cloudkid.Sound.instance;
         !s.exists(this._currentAudio) && this.captions && this.captions.hasCaption(this._currentAudio) ? (this.captions.run(this._currentAudio), 
         this._timer = this.captions.currentDuration, this._currentAudio = null, cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._update)) : (this._audioInst = s.play(this._currentAudio, null, null, null, null, null, null, this._audioListener), 
-        this.captions && (this.captions.run(this._currentAudio), cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._updateCaptionPos))), 
-        this._isWaiting = !1;
-        for (var i = 1; this._listCounter + i < this.audioList.length; ++i) {
-            var next = this.audioList[this._listCounter + i];
+        this.captions && (this.captions.run(this._currentAudio), cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._updateCaptionPos)));
+        for (var i = this._listCounter + 1; i < this.audioList.length; ++i) {
+            var next = this.audioList[i];
             if ("string" == typeof next) {
                 s.isLoaded(next) || s.preloadSound(next);
                 break;
             }
         }
     }, p.stop = function() {
-        this._isWaiting = !1, this._currentAudio && (cloudkid.Sound.instance.stop(this._currentAudio), 
-        this._currentAudio = null, this._callback = null), this.captions && this.captions.stop();
+        this._currentAudio && (cloudkid.Sound.instance.stop(this._currentAudio), this._currentAudio = null, 
+        this._callback = null), this.captions && this.captions.stop(), cloudkid.OS.instance.removeUpdateCallback("VOPlayer"), 
+        this.audioList = null;
     }, p.unloadPlayedAudio = function() {
         cloudkid.Sound.instance.unload(this._playedAudio), this._playedAudio = null;
     }, p.destroy = function() {
-        this.audioList = null, this._listHelper = null, this._currentAudio = null, this._audioInst = null, 
-        this._callback = null, this._audioListener = null, this._playedAudio = null, this.captions && (this.captions.destroy(), 
-        this.captions = null);
+        this.stop(), this.audioList = null, this._listHelper = null, this._currentAudio = null, 
+        this._audioInst = null, this._callback = null, this._audioListener = null, this._playedAudio = null, 
+        this.captions && (this.captions.destroy(), this.captions = null);
     }, namespace("cloudkid").VOPlayer = VOPlayer;
 }();

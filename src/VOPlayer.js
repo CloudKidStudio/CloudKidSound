@@ -243,10 +243,9 @@
 				cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._updateCaptionPos);
 			}
 		}
-		this._isWaiting = false;
-		for(var i = 1; this._listCounter + i < this.audioList.length; ++i)
+		for(var i = this._listCounter + 1; i < this.audioList.length; ++i)
 		{
-			var next = this.audioList[this._listCounter + i];
+			var next = this.audioList[i];
 			if(typeof next == "string")
 			{
 				if(!s.isLoaded(next))
@@ -265,7 +264,6 @@
 	*/
 	p.stop = function()
 	{
-		this._isWaiting = false;
 		if(this._currentAudio)
 		{
 			cloudkid.Sound.instance.stop(this._currentAudio);
@@ -274,6 +272,8 @@
 		}
 		if(this.captions)
 			this.captions.stop();
+		cloudkid.OS.instance.removeUpdateCallback("VOPlayer");
+		this.audioList = null;
 	};
 
 	/**
@@ -294,6 +294,7 @@
 	*/
 	p.destroy = function()
 	{
+		this.stop();
 		this.audioList = null;
 		this._listHelper = null;
 		this._currentAudio = null;
