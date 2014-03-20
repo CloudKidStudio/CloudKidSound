@@ -137,7 +137,7 @@
             s.playAfterLoad = !1;
             for (var waiting = s.waitingToPlay, i = 0; i < waiting.length; ++i) {
                 var inst = waiting[i];
-                inst._endCallback && inst._endCallback(), this._poolInst(inst);
+                this._poolInst(inst);
             }
             waiting.length = 0;
         }

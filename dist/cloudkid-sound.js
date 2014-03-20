@@ -561,8 +561,8 @@
 			for(var i = 0; i < waiting.length; ++i)
 			{
 				var inst = waiting[i];
-				if(inst._endCallback)
-					inst._endCallback();
+				/*if(inst._endCallback)
+					inst._endCallback();*/
 				this._poolInst(inst);
 			}
 			waiting.length = 0;

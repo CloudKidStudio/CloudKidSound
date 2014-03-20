@@ -1,18 +1,16 @@
 {
     "name": "cloudkid-sound",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "main": "dist/cloudkid-sound.min.js",
     "dependencies": {
         "cloudkid-os" : "*",
         "soundjs" : "https://github.com/CloudKidStudio/SoundJS.git"
     },
     "ignore": [
-        "build.xml",
-        "build.properties",
+        "build",
         "example",
         "docs",
         "libs",
-        "dependencies.txt",
         "src",
         "src.order"
     ]
