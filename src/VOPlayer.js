@@ -1,4 +1,11 @@
 (function() {
+	/**
+	*	A class for managing audio by only playing one at a time, playing a list, and even
+	*	managing captions (CloudKidCaptions library) at the same time.
+	*	@class cloudkid.VOPlayer
+	*	@constructor
+	*	@param {bool} useCaptions If a cloudkid.Captions object should be created for use.
+	*/
 	var VOPlayer = function(useCaptions)
 	{
 		this._audioListener = this._onAudioFinished.bind(this);
@@ -11,36 +18,91 @@
 	
 	var p = VOPlayer.prototype = {};
 	
-	/** If the VOPlayer should keep a list of all audio it plays for unloading later. */
+	/**
+	*	If the VOPlayer should keep a list of all audio it plays for unloading later. Default is false.
+	*	@property {bool} trackAudio
+	*	@public
+	*/
 	p.trackAudio = false;
-	/** The list of audio/silence times/functions. Generally you will not need to modify this. */
+	/**
+	*	The current list of audio/silence times/functions. Generally you will not need to modify this.
+	*	@property {Array} audioList
+	*	@public
+	*/
 	p.audioList = null;
-	/** The current position in audioList. */
+	/**
+	*	The current position in audioList.
+	*	@property {int} _listCounter
+	*	@private
+	*/
 	p._listCounter = 0;
-	/** The current audio alias being played. */
+	/**
+	*	The current audio alias being played.
+	*	@property {String} _currentAudio
+	*	@private
+	*/
 	p._currentAudio = null;
-	/** The current audio instance being played. */
+	/**
+	*	The current audio instance being played.
+	*	@property {SoundInst} _audioInst
+	*	@private
+	*/
 	p._audioInst = null;
-	/** The callback for when the list is finished. */
+	/**
+	*	The callback for when the list is finished.
+	*	@property {function} _callback
+	*	@private
+	*/
 	p._callback = null;
-	/** The bound _onAudioFinished call. */
+	/**
+	*	The bound _onAudioFinished call.
+	*	@property {function} _audioListener
+	*	@private
+	*/
 	p._audioListener = null;
+	/**
+	*	A list of audio file played by this, so that they can be unloaded later.
+	*	@property {Array} _playedAudio
+	*	@private
+	*/
 	p._playedAudio = null;
+	/**
+	*	A timer for silence entries in the list, in milliseconds.
+	*	@property {int} _timer
+	*	@private
+	*/
 	p._timer = 0;
-	/** The cloudkid.Captions object used for captions. */
+	/**
+	*	The cloudkid.Captions object used for captions. The developer is responsible for initializing this with a captions
+	*	dictionary config file and a reference to a text field.
+	*	@property {cloudkid.Captions} captions
+	*	@public
+	*/
 	p.captions = null;
-
+	/**
+	*	An Array used when play() is called to avoid creating lots of Array objects.
+	*	@property {Array} _listHelper
+	*	@private
+	*/
 	p._listHelper = null;
 	
-	/** If VOPlayer is currently playing (audio or silence) */
+	/**
+	*	If VOPlayer is currently playing (audio or silence).
+	*	@property {bool} playing
+	*	@public
+	*	@readOnly
+	*/
 	Object.defineProperty(p, "playing",
 	{
 		get: function() { return this._currentAudio !== null || this._timer > 0; }
 	});
 	
-	/** Plays a single audio alias, interrupting any current playback.
-	*	@param id The alias of the audio file to play.
-	*	@param callback The function to call when playback is complete.
+	/**
+	*	Plays a single audio alias, interrupting any current playback.
+	*	@method play
+	*	@public
+	*	@param {String} id The alias of the audio file to play.
+	*	@param {function} callback The function to call when playback is complete.
 	*/
 	p.play = function(id, callback)
 	{
@@ -53,9 +115,13 @@
 		this._onAudioFinished();
 	};
 	
-	/** Plays a list of audio files, timers, and/or functions, interrupting any current playback.
-	*	@param list The array of items to play/call in order.
-	*	@param callback The function to call when playback is complete.
+	/**
+	*	Plays a list of audio files, timers, and/or functions, interrupting any current playback.
+	*	Audio in the list will be preloaded to minimize pauses for loading.
+	*	@method playList
+	*	@public
+	*	@param {Array} list The array of items to play/call in order.
+	*	@param {function} callback The function to call when playback is complete.
 	*/
 	p.playList = function(list, callback)
 	{
@@ -67,7 +133,11 @@
 		this._onAudioFinished();
 	};
 	
-	/** Callback for when audio/timer is finished to advance to the next item in the list. */
+	/**
+	*	Callback for when audio/timer is finished to advance to the next item in the list.
+	*	@method _onAudioFinished
+	*	@private
+	*/
 	p._onAudioFinished = function()
 	{
 		cloudkid.OS.instance.removeUpdateCallback("VOPlayer");//remove any update callback
@@ -106,7 +176,13 @@
 		}
 	};
 
-	/** The update callback used for silence timers. */
+	/**
+	*	The update callback used for silence timers and updating captions without active audio.
+	*	This method is bound to the VOPlayer instance.
+	*	@method _update
+	*	@private
+	*	@param {int} elapsed The time elapsed since the previous frame, in milliseconds.
+	*/
 	p._update = function(elapsed)
 	{
 		if(this.captions)
@@ -118,13 +194,24 @@
 		}
 	};
 
+	/**
+	*	The update callback used for updating captions with active audio.
+	*	This method is bound to the VOPlayer instance.
+	*	@method _updateCaptionPos
+	*	@private
+	*	@param {int} elapsed The time elapsed since the previous frame, in milliseconds.
+	*/
 	p._updateCaptionPos = function(elapsed)
 	{
 		if(!this._audioInst) return;
 		this.captions.seek(this._audioInst.position);
 	};
 
-	/** Plays the current audio item and begins preloading the next item. */
+	/** 
+	*	Plays the current audio item and begins preloading the next item.
+	*	@method _playAudio
+	*	@private
+	*/
 	p._playAudio = function()
 	{
 		if(this.trackAudio)
@@ -171,7 +258,11 @@
 		}
 	};
 	
-	/** Stops playback of any audio/timer. */
+	/**
+	*	Stops playback of any audio/timer.
+	*	@method stop
+	*	@public
+	*/
 	p.stop = function()
 	{
 		this._isWaiting = false;
@@ -185,13 +276,22 @@
 			this.captions.stop();
 	};
 
-	/** Unloads all audio this VOPlayer has played. If trackAudio is false, this won't do anything. */
+	/**
+	*	Unloads all audio this VOPlayer has played. If trackAudio is false, this won't do anything.
+	*	@method unloadPlayedAudio
+	*	@public
+	*/
 	p.unloadPlayedAudio = function()
 	{
 		cloudkid.Sound.instance.unload(this._playedAudio);
 		this._playedAudio = null;
 	};
 
+	/**
+	*	Cleans up this VOPlayer.
+	*	@method destroy
+	*	@public
+	*/
 	p.destroy = function()
 	{
 		this.audioList = null;

@@ -12,8 +12,7 @@
             return _instance;
         }
     }), p.loadConfig = function(config, defaultContext) {
-        if (!config) return Debug.warn("Warning - cloudkid.Sound was told to load a null config"), 
-        void 0;
+        if (!config) return void Debug.warn("Warning - cloudkid.Sound was told to load a null config");
         var list = config.soundManifest, path = config.path;
         defaultContext = defaultContext || config.context;
         for (var i = 0, len = list.length; len > i; ++i) {
@@ -89,7 +88,7 @@
         if (loop === !0 && (loop = -1), completeCallback == Sound.UNHANDLED) return createjs.Sound.play(alias, interrupt, delay, offset, loop, volume, pan);
         var sound = this._sounds[alias];
         if (!sound) return Debug.error("cloudkid.Sound: sound " + alias + " not found!"), 
-        completeCallback && completeCallback(), void 0;
+        void (completeCallback && completeCallback());
         var inst, arr, state = sound.state;
         if (volume = "number" == typeof volume && volume > 0 ? volume : sound.volume, state == LOADED) {
             var channel = createjs.Sound.play(alias, interrupt, delay, offset, loop, volume, pan);
@@ -186,12 +185,10 @@
         }
     }, p.preloadSound = function(alias, callback) {
         var sound = this._sounds[alias];
-        return sound ? (sound.state == UNLOADED && (sound.state = LOADING, sound.preloadCallback = callback || null, 
-        cloudkid.MediaLoader.instance.load(sound.src, this._markLoaded, null, 0, sound)), 
-        void 0) : (Debug.error("Sound does not exist: " + alias + " - can't preload!"), 
-        void 0);
+        return sound ? void (sound.state == UNLOADED && (sound.state = LOADING, sound.preloadCallback = callback || null, 
+        cloudkid.MediaLoader.instance.load(sound.src, this._markLoaded, null, 0, sound))) : void Debug.error("Sound does not exist: " + alias + " - can't preload!");
     }, p.preload = function(list, callback) {
-        if (!list || 0 === list.length) return callback && callback(), void 0;
+        if (!list || 0 === list.length) return void (callback && callback());
         for (var tasks = [], i = 0, len = list.length; len > i; ++i) {
             var sound = this._sounds[list[i]];
             sound ? sound.state == UNLOADED && (sound.state = LOADING, tasks.push(new cloudkid.LoadTask(sound.id, sound.src, this._markLoaded, null, 0, sound))) : Debug.error("cloudkid.Sound was asked to preload " + list[i] + " but it is not a registered sound!");

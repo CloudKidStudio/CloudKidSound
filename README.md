@@ -3,6 +3,9 @@ CloudKidSound
 
 Sound Manager API for SoundJS
 
+##Documentation##
+http://cloudkidstudio.github.io/CloudKidSound/
+
 ##Installation##
 
 CloudKid Sound can be install using Bower.
