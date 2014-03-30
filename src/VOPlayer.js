@@ -236,7 +236,7 @@
 		}
 		else
 		{
-			this._audioInst = s.play(this._currentAudio, null, null, null, null, null, null, this._audioListener);
+			this._audioInst = s.play(this._currentAudio, this._audioListener);
 			if(this.captions)
 			{
 				this.captions.run(this._currentAudio);
