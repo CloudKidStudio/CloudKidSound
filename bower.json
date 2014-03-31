@@ -1,6 +1,6 @@
 {
     "name": "cloudkid-sound",
-    "version": "1.0.3",
+    "version": "2.0.0",
     "main": "dist/cloudkid-sound.min.js",
     "dependencies": {
         "cloudkid-os" : "*",
