@@ -340,6 +340,12 @@
 	*	@method play
 	*	@public
 	*	@param {String} alias The alias of the sound to play.
+	*	@param {function} completeCallback An optional function to call when the sound is finished. 
+			Passing cloudkid.Sound.UNHANDLED results in cloudkid.Sound not handling the sound 
+			and merely returning what SoundJS returns from its play() call.
+	*	@param {function} startCallback An optional function to call when the sound starts playback.
+			If the sound is loaded, this is called immediately, if not, it calls when the 
+			sound is finished loading.
 	*	@param {bool} interrupt If the sound should interrupt previous sounds (SoundJS parameter). Default is false.
 	*	@param {Number} delay The delay to play the sound at in milliseconds(SoundJS parameter). Default is 0.
 	*	@param {Number} offset The offset into the sound to play in milliseconds(SoundJS parameter). Default is 0.
@@ -347,16 +353,10 @@
 			Default is no looping.
 	*	@param {Number} volume The volume to play the sound at (0 to 1). Omit to use the default for the sound.
 	*	@param {Number} pan The panning to start the sound at (-1 to 1). Default is centered (0).
-	*	@param {function} completeCallback An optional function to call when the sound is finished. 
-			Passing cloudkid.Sound.UNHANDLED results in cloudkid.Sound not handling the sound 
-			and merely returning what SoundJS returns from its play() call.
-	*	@param {function} startCallback An optional function to call when the sound starts playback.
-			If the sound is loaded, this is called immediately, if not, it calls when the 
-			sound is finished loading.
 	*	@return {SoundInst} An internal SoundInst object that can be used for fading in/out as well as 
 			pausing and getting the sound's current position.
 	*/
-	p.play = function (alias, interrupt, delay, offset, loop, volume, pan, completeCallback, startCallback)
+	p.play = function (alias, completeCallback, startCallback, interrupt, delay, offset, loop, volume, pan)
 	{
 		if(loop === true)//Replace with correct infinite looping.
 			loop = -1;
@@ -476,6 +476,7 @@
 		rtn._channel = channel;
 		rtn.alias = id;
 		rtn.length = channel ? channel.getDuration() : 0;//set or reset this
+		rtn.isValid = true;
 		return rtn;
 	};
 
@@ -901,6 +902,7 @@
 		inst._startFunc = null;
 		inst.curVol = 0;
 		inst.paused = false;
+		inst.isValid = false;
 		this._pool.push(inst);
 	};
 	
@@ -1006,6 +1008,13 @@
 		*	@readOnly
 		*/
 		this.paused = false;
+		/**
+		*	An active SoundInst should always be valid. This is primarily for compatability with cloudkid.Audio.
+		*	@property {bool} isValid
+		*	@public
+		*	@readOnly
+		*/
+		this.isValid = true;
 	};
 	
 	/**
@@ -1383,7 +1392,7 @@
 		}
 		else
 		{
-			this._audioInst = s.play(this._currentAudio, null, null, null, null, null, null, this._audioListener);
+			this._audioInst = s.play(this._currentAudio, this._audioListener);
 			if(this.captions)
 			{
 				this.captions.run(this._currentAudio);

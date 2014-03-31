@@ -476,6 +476,7 @@
 		rtn._channel = channel;
 		rtn.alias = id;
 		rtn.length = channel ? channel.getDuration() : 0;//set or reset this
+		rtn.isValid = true;
 		return rtn;
 	};
 
@@ -901,6 +902,7 @@
 		inst._startFunc = null;
 		inst.curVol = 0;
 		inst.paused = false;
+		inst.isValid = false;
 		this._pool.push(inst);
 	};
 	
@@ -1006,6 +1008,13 @@
 		*	@readOnly
 		*/
 		this.paused = false;
+		/**
+		*	An active SoundInst should always be valid. This is primarily for compatability with cloudkid.Audio.
+		*	@property {bool} isValid
+		*	@public
+		*	@readOnly
+		*/
+		this.isValid = true;
 	};
 	
 	/**

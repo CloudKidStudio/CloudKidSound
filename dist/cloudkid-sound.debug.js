@@ -84,7 +84,7 @@
             }
         }
         fades.length = fades.length - trim, 0 === fades.length && cloudkid.OS.instance.removeUpdateCallback(UPDATE_ALIAS);
-    }, p.play = function(alias, interrupt, delay, offset, loop, volume, pan, completeCallback, startCallback) {
+    }, p.play = function(alias, completeCallback, startCallback, interrupt, delay, offset, loop, volume, pan) {
         if (loop === !0 && (loop = -1), completeCallback == Sound.UNHANDLED) return createjs.Sound.play(alias, interrupt, delay, offset, loop, volume, pan);
         var sound = this._sounds[alias];
         if (!sound) return Debug.error("cloudkid.Sound: sound " + alias + " not found!"), 
@@ -112,7 +112,7 @@
         var rtn;
         return this._pool.length ? rtn = this._pool.pop() : (rtn = new SoundInst(), rtn._endFunc = this._onSoundComplete.bind(this, rtn)), 
         rtn._channel = channel, rtn.alias = id, rtn.length = channel ? channel.getDuration() : 0, 
-        rtn;
+        rtn.isValid = !0, rtn;
     }, p._playAfterLoad = function(result) {
         var alias = "string" == typeof result ? result : result.id, sound = this._sounds[alias];
         if (sound.state = LOADED, sound.playAfterLoad) {
@@ -213,7 +213,7 @@
         }
     }, p._poolInst = function(inst) {
         inst._endCallback = null, inst.alias = null, inst._channel = null, inst._startFunc = null, 
-        inst.curVol = 0, inst.paused = !1, this._pool.push(inst);
+        inst.curVol = 0, inst.paused = !1, inst.isValid = !1, this._pool.push(inst);
     }, p.destroy = function() {
         _instance = null, this._volumes = null, this._fades = null, this._contexts = null, 
         this._pool = null;
@@ -221,7 +221,7 @@
     var SoundInst = function() {
         this._channel = null, this._endFunc = null, this._endCallback = null, this._startFunc = null, 
         this._startParams = null, this.alias = null, this._fTime = 0, this._fDur = 0, this._fStart = 0, 
-        this._fEnd = 0, this.curVol = 0, this.length = 0, this.paused = !1;
+        this._fEnd = 0, this.curVol = 0, this.length = 0, this.paused = !1, this.isValid = !0;
     };
     Object.defineProperty(SoundInst.prototype, "position", {
         get: function() {
@@ -294,7 +294,7 @@
         this.trackAudio && (this._playedAudio ? -1 == this._playedAudio.indexOf(this._currentAudio) && this._playedAudio.push(this._currentAudio) : this._playedAudio = [ this._currentAudio ]);
         var s = cloudkid.Sound.instance;
         !s.exists(this._currentAudio) && this.captions && this.captions.hasCaption(this._currentAudio) ? (this.captions.run(this._currentAudio), 
-        this._timer = this.captions.currentDuration, this._currentAudio = null, cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._update)) : (this._audioInst = s.play(this._currentAudio, null, null, null, null, null, null, this._audioListener), 
+        this._timer = this.captions.currentDuration, this._currentAudio = null, cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._update)) : (this._audioInst = s.play(this._currentAudio, this._audioListener), 
         this.captions && (this.captions.run(this._currentAudio), cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._updateCaptionPos)));
         for (var i = this._listCounter + 1; i < this.audioList.length; ++i) {
             var next = this.audioList[i];
