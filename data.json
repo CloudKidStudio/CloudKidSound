@@ -2,7 +2,7 @@
     "project": {
         "name": "CloudKid Sound API",
         "description": "CloudKid Sound API: A framework for Web Audio/Flash audio content built on top of CreateJS - SoundJS",
-        "version": "1.0.1",
+        "version": "2.0.0",
         "logo": "cloudkid.png"
     },
     "files": {
@@ -51,7 +51,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/Sound.js",
-            "line": 921,
+            "line": 923,
             "description": "A playing instance of a sound (or promise to play as soon as it loads). These can only\nbe created through cloudkid.Sound.instance.play()."
         },
         "SoundListTask": {
@@ -63,7 +63,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/Sound.js",
-            "line": 1084,
+            "line": 1093,
             "description": "A task for loading a list of sounds.. These can only\nbe created through cloudkid.Sound.instance.createPreloadTask().",
             "extends": "{cloudkid.Task}"
         },
@@ -76,7 +76,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/Sound.js",
-            "line": 1110,
+            "line": 1119,
             "description": "A private class that represents a sound context.",
             "is_constructor": 1,
             "params": [
@@ -443,6 +443,16 @@
                     "type": "String"
                 },
                 {
+                    "name": "completeCallback",
+                    "description": "An optional function to call when the sound is finished. \n\t\tPassing cloudkid.Sound.UNHANDLED results in cloudkid.Sound not handling the sound \n\t\tand merely returning what SoundJS returns from its play() call.",
+                    "type": "Function"
+                },
+                {
+                    "name": "startCallback",
+                    "description": "An optional function to call when the sound starts playback.\n\t\tIf the sound is loaded, this is called immediately, if not, it calls when the \n\t\tsound is finished loading.",
+                    "type": "Function"
+                },
+                {
                     "name": "interrupt",
                     "description": "If the sound should interrupt previous sounds (SoundJS parameter). Default is false.",
                     "type": "Bool"
@@ -471,16 +481,6 @@
                     "name": "pan",
                     "description": "The panning to start the sound at (-1 to 1). Default is centered (0).",
                     "type": "Number"
-                },
-                {
-                    "name": "completeCallback",
-                    "description": "An optional function to call when the sound is finished. \n\t\tPassing cloudkid.Sound.UNHANDLED results in cloudkid.Sound not handling the sound \n\t\tand merely returning what SoundJS returns from its play() call.",
-                    "type": "Function"
-                },
-                {
-                    "name": "startCallback",
-                    "description": "An optional function to call when the sound starts playback.\n\t\tIf the sound is loaded, this is called immediately, if not, it calls when the \n\t\tsound is finished loading.",
-                    "type": "Function"
                 }
             ],
             "return": {
@@ -517,7 +517,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 482,
+            "line": 483,
             "description": "Plays a sound after it finishes loading.",
             "itemtype": "method",
             "name": "_playAfterload",
@@ -534,7 +534,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 528,
+            "line": 529,
             "description": "The callback used for when a sound instance is complete.",
             "itemtype": "method",
             "name": "_onSoundComplete",
@@ -551,7 +551,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 545,
+            "line": 546,
             "description": "Stops all playing or loading instances of a given sound.",
             "itemtype": "method",
             "name": "stop",
@@ -568,7 +568,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 572,
+            "line": 573,
             "description": "Stops all playing SoundInsts for a sound.",
             "itemtype": "method",
             "name": "_stopSound",
@@ -585,7 +585,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 588,
+            "line": 589,
             "description": "Stops and repools a specific SoundInst.",
             "itemtype": "method",
             "name": "_stopInst",
@@ -602,7 +602,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 601,
+            "line": 602,
             "description": "Stops all sounds in a given context.",
             "itemtype": "method",
             "name": "stopContext",
@@ -619,7 +619,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 624,
+            "line": 625,
             "description": "Pauses a specific sound.",
             "itemtype": "method",
             "name": "pauseSound",
@@ -636,7 +636,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 643,
+            "line": 644,
             "description": "Unpauses a specific sound.",
             "itemtype": "method",
             "name": "unpauseSound",
@@ -653,7 +653,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 665,
+            "line": 666,
             "description": "Pauses all sounds.",
             "itemtype": "method",
             "name": "pauseAll",
@@ -663,7 +663,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 677,
+            "line": 678,
             "description": "Unpauses all sounds.",
             "itemtype": "method",
             "name": "unpauseAll",
@@ -673,7 +673,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 689,
+            "line": 690,
             "description": "Sets mute status of all sounds in a context",
             "itemtype": "method",
             "name": "setContextMute",
@@ -695,7 +695,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 719,
+            "line": 720,
             "description": "Sets volume of a context. Individual sound volumes are multiplied by this value.",
             "itemtype": "method",
             "name": "setContextVolume",
@@ -717,7 +717,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 749,
+            "line": 750,
             "description": "Preloads a specific sound.",
             "itemtype": "method",
             "name": "preloadSound",
@@ -739,7 +739,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 776,
+            "line": 777,
             "description": "Preloads a list of sounds.",
             "itemtype": "method",
             "name": "preload",
@@ -761,7 +761,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 829,
+            "line": 830,
             "description": "Marks a sound as loaded. If it needs to play after the load, then it is played.",
             "itemtype": "method",
             "name": "_markLoaded",
@@ -783,7 +783,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 854,
+            "line": 855,
             "description": "Creates a Task for the CloudKid Task library for preloading a list of sounds.",
             "itemtype": "method",
             "name": "createPreloadTask",
@@ -810,7 +810,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 867,
+            "line": 868,
             "description": "Unloads a list of sounds to reclaim memory if possible. \nIf the sounds are playing, they are stopped.",
             "itemtype": "method",
             "name": "unload",
@@ -827,7 +827,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 890,
+            "line": 891,
             "description": "Places a SoundInst back in the pool for reuse.",
             "itemtype": "method",
             "name": "_poolinst",
@@ -844,7 +844,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 907,
+            "line": 909,
             "description": "Destroys cloudkid.Sound. This does not unload loaded sounds, destroy SoundJS to do that.",
             "itemtype": "method",
             "name": "destroy",
@@ -854,7 +854,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 928,
+            "line": 930,
             "description": "SoundJS SoundInstance, essentially a sound channel.",
             "itemtype": "property",
             "name": "_channel",
@@ -865,7 +865,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 934,
+            "line": 936,
             "description": "Internal callback function for when the sound ends.",
             "itemtype": "property",
             "name": "_endFunc",
@@ -876,7 +876,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 940,
+            "line": 942,
             "description": "User's callback function for when the sound ends.",
             "itemtype": "property",
             "name": "_endCallback",
@@ -887,7 +887,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 946,
+            "line": 948,
             "description": "User's callback function for when the sound starts. This is only used if the sound wasn't loaded before play() was called.",
             "itemtype": "property",
             "name": "_startFunc",
@@ -898,7 +898,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 952,
+            "line": 954,
             "description": "An array of relevant parameters passed to play(). This is only used if the sound wasn't loaded before play() was called.",
             "itemtype": "property",
             "name": "_startParams",
@@ -909,7 +909,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 958,
+            "line": 960,
             "description": "The alias for the sound that this instance was created from.",
             "itemtype": "property",
             "name": "alias",
@@ -921,7 +921,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 965,
+            "line": 967,
             "description": "The current time in milliseconds for the fade that this sound instance is performing.",
             "itemtype": "property",
             "name": "_fTime",
@@ -932,7 +932,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 971,
+            "line": 973,
             "description": "The duration in milliseconds for the fade that this sound instance is performing.",
             "itemtype": "property",
             "name": "_fDur",
@@ -943,7 +943,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 977,
+            "line": 979,
             "description": "The starting volume for the fade that this sound instance is performing.",
             "itemtype": "property",
             "name": "_fEnd",
@@ -954,7 +954,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 983,
+            "line": 985,
             "description": "The ending volume for the fade that this sound instance is performing.",
             "itemtype": "property",
             "name": "_fEnd",
@@ -965,7 +965,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 989,
+            "line": 991,
             "description": "The current sound volume (0 to 1). This is multiplied by the sound context's volume.\nSetting this won't take effect until updateVolume() is called.",
             "itemtype": "property",
             "name": "curVol",
@@ -976,7 +976,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 996,
+            "line": 998,
             "description": "The length of the sound in milliseconds. This is 0 if it hasn't finished loading.",
             "itemtype": "property",
             "name": "length",
@@ -987,7 +987,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1002,
+            "line": 1004,
             "description": "If the sound is currently paused. Setting this has no effect - use pause() and unpause().",
             "itemtype": "property",
             "name": "paused",
@@ -1000,6 +1000,18 @@
         {
             "file": "src/Sound.js",
             "line": 1011,
+            "description": "An active SoundInst should always be valid. This is primarily for compatability with cloudkid.Audio.",
+            "itemtype": "property",
+            "name": "isValid",
+            "type": "Bool",
+            "access": "public",
+            "tagname": "",
+            "readonly": "",
+            "class": "SoundInst"
+        },
+        {
+            "file": "src/Sound.js",
+            "line": 1020,
             "description": "The position of the sound playhead in milliseconds, or 0 if it hasn't started playing yet.",
             "itemtype": "property",
             "name": "position",
@@ -1010,7 +1022,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1021,
+            "line": 1030,
             "description": "Stops this SoundInst.",
             "itemtype": "method",
             "name": "stop",
@@ -1020,7 +1032,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1034,
+            "line": 1043,
             "description": "Updates the volume of this SoundInst.",
             "itemtype": "method",
             "name": "updateVolume",
@@ -1037,7 +1049,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1058,
+            "line": 1067,
             "description": "Pauses this SoundInst.",
             "itemtype": "method",
             "name": "pause",
@@ -1047,7 +1059,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1071,
+            "line": 1080,
             "description": "Unpauses this SoundInst.",
             "itemtype": "method",
             "name": "unpause",
@@ -1057,7 +1069,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1118,
+            "line": 1127,
             "description": "The name of the sound context.",
             "itemtype": "property",
             "name": "id",
@@ -1068,7 +1080,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1124,
+            "line": 1133,
             "description": "The current volume to apply to all sounds in the context (0 to 1).",
             "itemtype": "property",
             "name": "volume",
@@ -1079,7 +1091,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1130,
+            "line": 1139,
             "description": "If all sounds in the sound context are muted or not.",
             "itemtype": "property",
             "name": "muted",
@@ -1090,7 +1102,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1136,
+            "line": 1145,
             "description": "The sound objects in this context, from Sound.instance._sounds;",
             "itemtype": "property",
             "name": "sounds",
@@ -1332,7 +1344,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 261,
+            "line": 260,
             "description": "Stops playback of any audio/timer.",
             "itemtype": "method",
             "name": "stop",
@@ -1342,7 +1354,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 279,
+            "line": 280,
             "description": "Unloads all audio this VOPlayer has played. If trackAudio is false, this won't do anything.",
             "itemtype": "method",
             "name": "unloadPlayedAudio",
@@ -1352,7 +1364,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 290,
+            "line": 291,
             "description": "Cleans up this VOPlayer.",
             "itemtype": "method",
             "name": "destroy",

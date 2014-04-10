@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.1</em>
+            <em>API Docs for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -625,7 +625,7 @@ for managing sounds.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l829"><code>src&#x2F;Sound.js:829</code></a>
+        <a href="../files/src_Sound.js.html#l830"><code>src&#x2F;Sound.js:830</code></a>
         
         </p>
 
@@ -732,7 +732,7 @@ for managing sounds.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l528"><code>src&#x2F;Sound.js:528</code></a>
+        <a href="../files/src_Sound.js.html#l529"><code>src&#x2F;Sound.js:529</code></a>
         
         </p>
 
@@ -823,7 +823,7 @@ for managing sounds.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l482"><code>src&#x2F;Sound.js:482</code></a>
+        <a href="../files/src_Sound.js.html#l483"><code>src&#x2F;Sound.js:483</code></a>
         
         </p>
 
@@ -914,7 +914,7 @@ for managing sounds.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l890"><code>src&#x2F;Sound.js:890</code></a>
+        <a href="../files/src_Sound.js.html#l891"><code>src&#x2F;Sound.js:891</code></a>
         
         </p>
 
@@ -1005,7 +1005,7 @@ for managing sounds.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l588"><code>src&#x2F;Sound.js:588</code></a>
+        <a href="../files/src_Sound.js.html#l589"><code>src&#x2F;Sound.js:589</code></a>
         
         </p>
 
@@ -1096,7 +1096,7 @@ for managing sounds.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l572"><code>src&#x2F;Sound.js:572</code></a>
+        <a href="../files/src_Sound.js.html#l573"><code>src&#x2F;Sound.js:573</code></a>
         
         </p>
 
@@ -1290,7 +1290,7 @@ for managing sounds.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l854"><code>src&#x2F;Sound.js:854</code></a>
+        <a href="../files/src_Sound.js.html#l855"><code>src&#x2F;Sound.js:855</code></a>
         
         </p>
 
@@ -1403,7 +1403,7 @@ for managing sounds.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l907"><code>src&#x2F;Sound.js:907</code></a>
+        <a href="../files/src_Sound.js.html#l909"><code>src&#x2F;Sound.js:909</code></a>
         
         </p>
 
@@ -2547,7 +2547,7 @@ is stopped after the fade.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l665"><code>src&#x2F;Sound.js:665</code></a>
+        <a href="../files/src_Sound.js.html#l666"><code>src&#x2F;Sound.js:666</code></a>
         
         </p>
 
@@ -2614,7 +2614,7 @@ is stopped after the fade.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l624"><code>src&#x2F;Sound.js:624</code></a>
+        <a href="../files/src_Sound.js.html#l625"><code>src&#x2F;Sound.js:625</code></a>
         
         </p>
 
@@ -2677,6 +2677,18 @@ is stopped after the fade.</p>
             
                 <li class="arg">
                     
+                        <code>completeCallback</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>startCallback</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
                         <code>interrupt</code>
                     
                 </li>
@@ -2708,18 +2720,6 @@ is stopped after the fade.</p>
                 <li class="arg">
                     
                         <code>pan</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>completeCallback</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>startCallback</code>
                     
                 </li>
             
@@ -2789,6 +2789,42 @@ is stopped after the fade.</p>
 
                     <div class="param-description">
                         <p>The alias of the sound to play.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">completeCallback</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>An optional function to call when the sound is finished. 
+        Passing cloudkid.Sound.UNHANDLED results in cloudkid.Sound not handling the sound 
+        and merely returning what SoundJS returns from its play() call.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">startCallback</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>An optional function to call when the sound starts playback.
+        If the sound is loaded, this is called immediately, if not, it calls when the 
+        sound is finished loading.</p>
 
                     </div>
 
@@ -2892,42 +2928,6 @@ is stopped after the fade.</p>
                     
                 </li>
             
-                <li class="param">
-                    
-                        <code class="param-name">completeCallback</code>
-                        <span class="type">Function</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>An optional function to call when the sound is finished. 
-        Passing cloudkid.Sound.UNHANDLED results in cloudkid.Sound not handling the sound 
-        and merely returning what SoundJS returns from its play() call.</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">startCallback</code>
-                        <span class="type">Function</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>An optional function to call when the sound starts playback.
-        If the sound is loaded, this is called immediately, if not, it calls when the 
-        sound is finished loading.</p>
-
-                    </div>
-
-                    
-                </li>
-            
             </ul>
         </div>
     
@@ -3003,7 +3003,7 @@ is stopped after the fade.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l776"><code>src&#x2F;Sound.js:776</code></a>
+        <a href="../files/src_Sound.js.html#l777"><code>src&#x2F;Sound.js:777</code></a>
         
         </p>
 
@@ -3116,7 +3116,7 @@ is stopped after the fade.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l749"><code>src&#x2F;Sound.js:749</code></a>
+        <a href="../files/src_Sound.js.html#l750"><code>src&#x2F;Sound.js:750</code></a>
         
         </p>
 
@@ -3229,7 +3229,7 @@ is stopped after the fade.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l689"><code>src&#x2F;Sound.js:689</code></a>
+        <a href="../files/src_Sound.js.html#l690"><code>src&#x2F;Sound.js:690</code></a>
         
         </p>
 
@@ -3342,7 +3342,7 @@ is stopped after the fade.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l719"><code>src&#x2F;Sound.js:719</code></a>
+        <a href="../files/src_Sound.js.html#l720"><code>src&#x2F;Sound.js:720</code></a>
         
         </p>
 
@@ -3449,7 +3449,7 @@ is stopped after the fade.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l545"><code>src&#x2F;Sound.js:545</code></a>
+        <a href="../files/src_Sound.js.html#l546"><code>src&#x2F;Sound.js:546</code></a>
         
         </p>
 
@@ -3540,7 +3540,7 @@ is stopped after the fade.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l601"><code>src&#x2F;Sound.js:601</code></a>
+        <a href="../files/src_Sound.js.html#l602"><code>src&#x2F;Sound.js:602</code></a>
         
         </p>
 
@@ -3631,7 +3631,7 @@ is stopped after the fade.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l867"><code>src&#x2F;Sound.js:867</code></a>
+        <a href="../files/src_Sound.js.html#l868"><code>src&#x2F;Sound.js:868</code></a>
         
         </p>
 
@@ -3713,7 +3713,7 @@ If the sounds are playing, they are stopped.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l677"><code>src&#x2F;Sound.js:677</code></a>
+        <a href="../files/src_Sound.js.html#l678"><code>src&#x2F;Sound.js:678</code></a>
         
         </p>
 
@@ -3780,7 +3780,7 @@ If the sounds are playing, they are stopped.</p>
             
         
         
-        <a href="../files/src_Sound.js.html#l643"><code>src&#x2F;Sound.js:643</code></a>
+        <a href="../files/src_Sound.js.html#l644"><code>src&#x2F;Sound.js:644</code></a>
         
         </p>
 

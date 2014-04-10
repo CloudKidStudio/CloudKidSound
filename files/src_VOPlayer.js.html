@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.1</em>
+            <em>API Docs for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -332,17 +332,16 @@
 		}
 		else
 		{
-			this._audioInst = s.play(this._currentAudio, null, null, null, null, null, null, this._audioListener);
+			this._audioInst = s.play(this._currentAudio, this._audioListener);
 			if(this.captions)
 			{
 				this.captions.run(this._currentAudio);
 				cloudkid.OS.instance.addUpdateCallback(&quot;VOPlayer&quot;, this._updateCaptionPos);
 			}
 		}
-		this._isWaiting = false;
-		for(var i = 1; this._listCounter + i &lt; this.audioList.length; ++i)
+		for(var i = this._listCounter + 1; i &lt; this.audioList.length; ++i)
 		{
-			var next = this.audioList[this._listCounter + i];
+			var next = this.audioList[i];
 			if(typeof next == &quot;string&quot;)
 			{
 				if(!s.isLoaded(next))
@@ -361,7 +360,6 @@
 	*/
 	p.stop = function()
 	{
-		this._isWaiting = false;
 		if(this._currentAudio)
 		{
 			cloudkid.Sound.instance.stop(this._currentAudio);
@@ -370,6 +368,9 @@
 		}
 		if(this.captions)
 			this.captions.stop();
+		cloudkid.OS.instance.removeUpdateCallback(&quot;VOPlayer&quot;);
+		this.audioList = null;
+		this._timer = 0;
 	};
 
 	/**
@@ -390,6 +391,7 @@
 	*/
 	p.destroy = function()
 	{
+		this.stop();
 		this.audioList = null;
 		this._listHelper = null;
 		this._currentAudio = null;
