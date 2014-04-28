@@ -2,15 +2,17 @@
     "project": {
         "name": "CloudKid Sound API",
         "description": "CloudKid Sound API: A framework for Web Audio/Flash audio content built on top of CreateJS - SoundJS",
-        "version": "2.0.0",
+        "version": "2.0.1",
         "logo": ""
     },
     "files": {
         "src/Sound.js": {
             "name": "src/Sound.js",
-            "modules": {},
+            "modules": {
+                "cloudkid": 1
+            },
             "classes": {
-                "cloudkid.Sound": 1,
+                "Sound": 1,
                 "SoundInst": 1,
                 "SoundListTask": 1,
                 "SoundContext": 1
@@ -22,24 +24,54 @@
             "name": "src/VOPlayer.js",
             "modules": {},
             "classes": {
-                "cloudkid.VOPlayer": 1
+                "VOPlayer": 1
             },
             "fors": {},
             "namespaces": {}
         }
     },
-    "modules": {},
+    "modules": {
+        "cloudkid": {
+            "name": "cloudkid",
+            "submodules": {},
+            "classes": {
+                "Sound": 1,
+                "SoundInst": 1,
+                "SoundListTask": 1,
+                "SoundContext": 1,
+                "VOPlayer": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/VOPlayer.js",
+            "line": 11,
+            "description": "Acts as a wrapper for SoundJS as well as adding lots of other functionality\nfor managing sounds.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "useCaptions",
+                    "description": "If a cloudkid.Captions object should be created for use \n\t\tor the captions object to use",
+                    "type": "bool|cloudkid.Captions",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ]
+        }
+    },
     "classes": {
-        "cloudkid.Sound": {
-            "name": "cloudkid.Sound",
-            "shortname": "cloudkid.Sound",
+        "Sound": {
+            "name": "Sound",
+            "shortname": "Sound",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "cloudkid",
+            "namespace": "",
             "file": "src/Sound.js",
-            "line": 2,
+            "line": 11,
             "description": "Acts as a wrapper for SoundJS as well as adding lots of other functionality\nfor managing sounds."
         },
         "SoundInst": {
@@ -50,8 +82,10 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "cloudkid",
+            "namespace": "",
             "file": "src/Sound.js",
-            "line": 923,
+            "line": 933,
             "description": "A playing instance of a sound (or promise to play as soon as it loads). These can only\nbe created through cloudkid.Sound.instance.play()."
         },
         "SoundListTask": {
@@ -62,9 +96,11 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "cloudkid",
+            "namespace": "",
             "file": "src/Sound.js",
-            "line": 1093,
-            "description": "A task for loading a list of sounds.. These can only\nbe created through cloudkid.Sound.instance.createPreloadTask().",
+            "line": 1103,
+            "description": "A task for loading a list of sounds.. These can only\nbe created through Sound.instance.createPreloadTask().",
             "extends": "{cloudkid.Task}"
         },
         "SoundContext": {
@@ -75,8 +111,10 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "cloudkid",
+            "namespace": "",
             "file": "src/Sound.js",
-            "line": 1119,
+            "line": 1129,
             "description": "A private class that represents a sound context.",
             "is_constructor": 1,
             "params": [
@@ -87,97 +125,92 @@
                 }
             ]
         },
-        "cloudkid.VOPlayer": {
-            "name": "cloudkid.VOPlayer",
-            "shortname": "cloudkid.VOPlayer",
+        "VOPlayer": {
+            "name": "VOPlayer",
+            "shortname": "VOPlayer",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "cloudkid",
+            "namespace": "",
             "file": "src/VOPlayer.js",
-            "line": 2,
-            "description": "A class for managing audio by only playing one at a time, playing a list, and even\nmanaging captions (CloudKidCaptions library) at the same time.",
-            "is_constructor": 1,
-            "params": [
-                {
-                    "name": "useCaptions",
-                    "description": "If a cloudkid.Captions object should be created for use.",
-                    "type": "Bool"
-                }
-            ]
+            "line": 11,
+            "description": "A class for managing audio by only playing one at a time, playing a list, and even\nmanaging captions (CloudKidCaptions library) at the same time."
         }
     },
     "classitems": [
         {
             "file": "src/Sound.js",
-            "line": 15,
+            "line": 26,
             "description": "A copy of _playAfterLoad bound to this Sound instance.",
             "itemtype": "property",
             "name": "_playAfterLoadBound",
             "type": "Function",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 27,
+            "line": 38,
             "description": "Dictionary of sound objects, containing configuration info and playback objects.",
             "itemtype": "property",
             "name": "_sounds",
             "type": "Object",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 33,
-            "description": "Array of SoundInst objects that are being faded in or out.",
-            "itemtype": "property",
-            "name": "_fades",
-            "type": "Array",
-            "access": "private",
-            "tagname": "",
-            "class": "cloudkid.Sound"
+            "line": 44,
+            "description": "*  Array of SoundInst objects that are being faded in or out.\n\t*  @property {Array} _fades\n\t*  @private",
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 39,
+            "line": 52,
             "description": "Array of SoundInst objects waiting to be used.",
             "itemtype": "property",
             "name": "_pool",
             "type": "Array",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 45,
+            "line": 59,
             "description": "The extension of the supported sound type that will be used.",
             "itemtype": "property",
             "name": "supportedSound",
             "type": "String",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 51,
+            "line": 66,
             "description": "Dictionary of SoundContexts.",
             "itemtype": "property",
             "name": "_contexts",
             "type": "Object",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 65,
+            "line": 80,
             "description": "A constant for telling Sound not to handle a sound with play(), but to\nreturn what SoundJS returns directly.",
             "itemtype": "property",
             "name": "UNHANDLED",
@@ -185,11 +218,12 @@
             "access": "public",
             "tagname": "",
             "static": 1,
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 74,
+            "line": 89,
             "description": "Initializes the Sound singleton.",
             "itemtype": "method",
             "name": "init",
@@ -206,23 +240,25 @@
                     "type": "Object"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 89,
+            "line": 104,
             "description": "The singleton instance of Sound.",
             "itemtype": "property",
             "name": "instance",
-            "type": "cloudkid.Sound",
+            "type": "Sound",
             "access": "public",
             "tagname": "",
             "static": 1,
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 100,
+            "line": 115,
             "description": "Loads a config object.",
             "itemtype": "method",
             "name": "loadConfig",
@@ -240,11 +276,12 @@
                     "type": "String"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 141,
+            "line": 156,
             "description": "If a sound exists in the list of recognized sounds.",
             "itemtype": "method",
             "name": "exists",
@@ -261,11 +298,12 @@
                 "description": "true if the sound exists, false otherwise.",
                 "type": "Bool"
             },
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 153,
+            "line": 168,
             "description": "If a sound is unloaded.",
             "itemtype": "method",
             "name": "isUnloaded",
@@ -282,11 +320,12 @@
                 "description": "true if the sound is unloaded, false if it is loaded, loading or does not exist.",
                 "type": "Bool"
             },
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 165,
+            "line": 180,
             "description": "If a sound is loaded.",
             "itemtype": "method",
             "name": "isLoaded",
@@ -303,11 +342,12 @@
                 "description": "true if the sound is loaded, false if it is not loaded or does not exist.",
                 "type": "Bool"
             },
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 177,
+            "line": 192,
             "description": "If a sound is in the process of being loaded",
             "itemtype": "method",
             "name": "isLoading",
@@ -324,11 +364,12 @@
                 "description": "true if the sound is currently loading, false if it is loaded, unloaded, or does not exist.",
                 "type": "Bool"
             },
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 189,
+            "line": 204,
             "description": "If a sound is playing.",
             "itemtype": "method",
             "name": "isPlaying",
@@ -345,11 +386,12 @@
                 "description": "true if the sound is currently playing or loading with an intent to play, false if it is not playing or does not exist.",
                 "type": "Bool"
             },
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 202,
+            "line": 217,
             "description": "Fades a sound from 0 to a specified volume.",
             "itemtype": "method",
             "name": "fadeIn",
@@ -377,11 +419,12 @@
                     "type": "Number"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 241,
+            "line": 256,
             "description": "Fades a sound from the current volume to a specified volume. A sound that ends at 0 volume\nis stopped after the fade.",
             "itemtype": "method",
             "name": "fadeOut",
@@ -409,11 +452,12 @@
                     "type": "Number"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 286,
+            "line": 301,
             "description": "The update call, used for fading sounds. This is bound to the instance of Sound",
             "itemtype": "method",
             "name": "_update",
@@ -426,11 +470,12 @@
                     "type": "Int"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 338,
+            "line": 353,
             "description": "Plays a sound.",
             "itemtype": "method",
             "name": "play",
@@ -487,11 +532,12 @@
                 "description": "An internal SoundInst object that can be used for fading in/out as well as \n\t\tpausing and getting the sound's current position.",
                 "type": "SoundInst"
             },
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 458,
+            "line": 473,
             "description": "Gets a SoundInst, from the pool if available or maks a new one if not.",
             "itemtype": "method",
             "name": "_getSoundInst",
@@ -513,11 +559,12 @@
                 "description": "The SoundInst that is ready to use.",
                 "type": "SoundInst"
             },
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 483,
+            "line": 498,
             "description": "Plays a sound after it finishes loading.",
             "itemtype": "method",
             "name": "_playAfterload",
@@ -530,11 +577,12 @@
                     "type": "String"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 529,
+            "line": 544,
             "description": "The callback used for when a sound instance is complete.",
             "itemtype": "method",
             "name": "_onSoundComplete",
@@ -547,11 +595,12 @@
                     "type": "SoundInst"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 546,
+            "line": 561,
             "description": "Stops all playing or loading instances of a given sound.",
             "itemtype": "method",
             "name": "stop",
@@ -564,11 +613,12 @@
                     "type": "String"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 573,
+            "line": 588,
             "description": "Stops all playing SoundInsts for a sound.",
             "itemtype": "method",
             "name": "_stopSound",
@@ -581,11 +631,12 @@
                     "type": "Object"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 589,
+            "line": 604,
             "description": "Stops and repools a specific SoundInst.",
             "itemtype": "method",
             "name": "_stopInst",
@@ -598,11 +649,12 @@
                     "type": "SoundInst"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 602,
+            "line": 617,
             "description": "Stops all sounds in a given context.",
             "itemtype": "method",
             "name": "stopContext",
@@ -615,11 +667,12 @@
                     "type": "String"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 625,
+            "line": 640,
             "description": "Pauses a specific sound.",
             "itemtype": "method",
             "name": "pauseSound",
@@ -632,11 +685,12 @@
                     "type": "String"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 644,
+            "line": 659,
             "description": "Unpauses a specific sound.",
             "itemtype": "method",
             "name": "unpauseSound",
@@ -649,31 +703,34 @@
                     "type": "String"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 666,
+            "line": 681,
             "description": "Pauses all sounds.",
             "itemtype": "method",
             "name": "pauseAll",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 678,
+            "line": 693,
             "description": "Unpauses all sounds.",
             "itemtype": "method",
             "name": "unpauseAll",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 690,
+            "line": 705,
             "description": "Sets mute status of all sounds in a context",
             "itemtype": "method",
             "name": "setContextMute",
@@ -691,11 +748,12 @@
                     "type": "Bool"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 720,
+            "line": 735,
             "description": "Sets volume of a context. Individual sound volumes are multiplied by this value.",
             "itemtype": "method",
             "name": "setContextVolume",
@@ -713,11 +771,12 @@
                     "type": "Number"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 750,
+            "line": 765,
             "description": "Preloads a specific sound.",
             "itemtype": "method",
             "name": "preloadSound",
@@ -735,11 +794,12 @@
                     "type": "Function"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 777,
+            "line": 792,
             "description": "Preloads a list of sounds.",
             "itemtype": "method",
             "name": "preload",
@@ -757,11 +817,12 @@
                     "type": "Function"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 830,
+            "line": 840,
             "description": "Marks a sound as loaded. If it needs to play after the load, then it is played.",
             "itemtype": "method",
             "name": "_markLoaded",
@@ -779,11 +840,12 @@
                     "type": "Function"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 855,
+            "line": 865,
             "description": "Creates a Task for the CloudKid Task library for preloading a list of sounds.",
             "itemtype": "method",
             "name": "createPreloadTask",
@@ -806,11 +868,12 @@
                     "type": "Function"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 868,
+            "line": 878,
             "description": "Unloads a list of sounds to reclaim memory if possible. \nIf the sounds are playing, they are stopped.",
             "itemtype": "method",
             "name": "unload",
@@ -823,11 +886,12 @@
                     "type": "Array"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 891,
+            "line": 901,
             "description": "Places a SoundInst back in the pool for reuse.",
             "itemtype": "method",
             "name": "_poolinst",
@@ -840,76 +904,83 @@
                     "type": "SoundInst"
                 }
             ],
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 909,
+            "line": 919,
             "description": "Destroys cloudkid.Sound. This does not unload loaded sounds, destroy SoundJS to do that.",
             "itemtype": "method",
             "name": "destroy",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.Sound"
+            "class": "Sound",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 930,
+            "line": 940,
             "description": "SoundJS SoundInstance, essentially a sound channel.",
             "itemtype": "property",
             "name": "_channel",
             "type": "createjs.SoundInstance",
             "access": "private",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 936,
+            "line": 946,
             "description": "Internal callback function for when the sound ends.",
             "itemtype": "property",
             "name": "_endFunc",
             "type": "Function",
             "access": "private",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 942,
+            "line": 952,
             "description": "User's callback function for when the sound ends.",
             "itemtype": "property",
             "name": "_endCallback",
             "type": "Function",
             "access": "private",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 948,
+            "line": 958,
             "description": "User's callback function for when the sound starts. This is only used if the sound wasn't loaded before play() was called.",
             "itemtype": "property",
             "name": "_startFunc",
             "type": "Function",
             "access": "private",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 954,
+            "line": 964,
             "description": "An array of relevant parameters passed to play(). This is only used if the sound wasn't loaded before play() was called.",
             "itemtype": "property",
             "name": "_startParams",
             "type": "Array",
             "access": "private",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 960,
+            "line": 970,
             "description": "The alias for the sound that this instance was created from.",
             "itemtype": "property",
             "name": "alias",
@@ -917,77 +988,84 @@
             "access": "public",
             "tagname": "",
             "readonly": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 967,
+            "line": 977,
             "description": "The current time in milliseconds for the fade that this sound instance is performing.",
             "itemtype": "property",
             "name": "_fTime",
             "type": "Number",
             "access": "private",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 973,
+            "line": 983,
             "description": "The duration in milliseconds for the fade that this sound instance is performing.",
             "itemtype": "property",
             "name": "_fDur",
             "type": "Number",
             "access": "private",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 979,
+            "line": 989,
             "description": "The starting volume for the fade that this sound instance is performing.",
             "itemtype": "property",
             "name": "_fEnd",
             "type": "Number",
             "access": "private",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 985,
+            "line": 995,
             "description": "The ending volume for the fade that this sound instance is performing.",
             "itemtype": "property",
             "name": "_fEnd",
             "type": "Number",
             "access": "private",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 991,
+            "line": 1001,
             "description": "The current sound volume (0 to 1). This is multiplied by the sound context's volume.\nSetting this won't take effect until updateVolume() is called.",
             "itemtype": "property",
             "name": "curVol",
             "type": "Number",
             "access": "public",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 998,
+            "line": 1008,
             "description": "The length of the sound in milliseconds. This is 0 if it hasn't finished loading.",
             "itemtype": "property",
             "name": "length",
             "type": "Number",
             "access": "public",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1004,
+            "line": 1014,
             "description": "If the sound is currently paused. Setting this has no effect - use pause() and unpause().",
             "itemtype": "property",
             "name": "paused",
@@ -995,11 +1073,12 @@
             "access": "public",
             "tagname": "",
             "readonly": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1011,
+            "line": 1021,
             "description": "An active SoundInst should always be valid. This is primarily for compatability with cloudkid.Audio.",
             "itemtype": "property",
             "name": "isValid",
@@ -1007,32 +1086,35 @@
             "access": "public",
             "tagname": "",
             "readonly": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1020,
+            "line": 1030,
             "description": "The position of the sound playhead in milliseconds, or 0 if it hasn't started playing yet.",
             "itemtype": "property",
             "name": "position",
             "type": "Number",
             "access": "public",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1030,
+            "line": 1040,
             "description": "Stops this SoundInst.",
             "itemtype": "method",
             "name": "stop",
             "access": "public",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1043,
+            "line": 1053,
             "description": "Updates the volume of this SoundInst.",
             "itemtype": "method",
             "name": "updateVolume",
@@ -1045,196 +1127,214 @@
                     "type": "Number"
                 }
             ],
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1067,
+            "line": 1077,
             "description": "Pauses this SoundInst.",
             "itemtype": "method",
             "name": "pause",
             "access": "public",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1080,
+            "line": 1090,
             "description": "Unpauses this SoundInst.",
             "itemtype": "method",
             "name": "unpause",
             "access": "public",
             "tagname": "",
-            "class": "SoundInst"
+            "class": "SoundInst",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1127,
+            "line": 1137,
             "description": "The name of the sound context.",
             "itemtype": "property",
             "name": "id",
             "type": "String",
             "access": "public",
             "tagname": "",
-            "class": "SoundContext"
+            "class": "SoundContext",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1133,
+            "line": 1143,
             "description": "The current volume to apply to all sounds in the context (0 to 1).",
             "itemtype": "property",
             "name": "volume",
             "type": "Number",
             "access": "public",
             "tagname": "",
-            "class": "SoundContext"
+            "class": "SoundContext",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1139,
+            "line": 1149,
             "description": "If all sounds in the sound context are muted or not.",
             "itemtype": "property",
             "name": "muted",
             "type": "Bool",
             "access": "public",
             "tagname": "",
-            "class": "SoundContext"
+            "class": "SoundContext",
+            "module": "cloudkid"
         },
         {
             "file": "src/Sound.js",
-            "line": 1145,
+            "line": 1155,
             "description": "The sound objects in this context, from Sound.instance._sounds;",
             "itemtype": "property",
             "name": "sounds",
             "type": "Array",
             "access": "public",
             "tagname": "",
-            "class": "SoundContext"
+            "class": "SoundContext",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 21,
+            "line": 40,
             "description": "If the VOPlayer should keep a list of all audio it plays for unloading later. Default is false.",
             "itemtype": "property",
             "name": "trackAudio",
             "type": "Bool",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 27,
+            "line": 47,
             "description": "The current list of audio/silence times/functions. Generally you will not need to modify this.",
             "itemtype": "property",
             "name": "audioList",
             "type": "Array",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 33,
+            "line": 54,
             "description": "The current position in audioList.",
             "itemtype": "property",
             "name": "_listCounter",
             "type": "Int",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 39,
+            "line": 61,
             "description": "The current audio alias being played.",
             "itemtype": "property",
             "name": "_currentAudio",
             "type": "String",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 45,
+            "line": 68,
             "description": "The current audio instance being played.",
             "itemtype": "property",
             "name": "_audioInst",
             "type": "SoundInst",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 51,
+            "line": 75,
             "description": "The callback for when the list is finished.",
             "itemtype": "property",
             "name": "_callback",
             "type": "Function",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 57,
+            "line": 82,
             "description": "The bound _onAudioFinished call.",
             "itemtype": "property",
             "name": "_audioListener",
             "type": "Function",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 63,
+            "line": 89,
             "description": "A list of audio file played by this, so that they can be unloaded later.",
             "itemtype": "property",
             "name": "_playedAudio",
             "type": "Array",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 69,
+            "line": 96,
             "description": "A timer for silence entries in the list, in milliseconds.",
             "itemtype": "property",
             "name": "_timer",
             "type": "Int",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 75,
+            "line": 103,
             "description": "The cloudkid.Captions object used for captions. The developer is responsible for initializing this with a captions\ndictionary config file and a reference to a text field.",
             "itemtype": "property",
             "name": "captions",
             "type": "cloudkid.Captions",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 82,
+            "line": 111,
             "description": "An Array used when play() is called to avoid creating lots of Array objects.",
             "itemtype": "property",
             "name": "_listHelper",
             "type": "Array",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 89,
+            "line": 119,
             "description": "If VOPlayer is currently playing (audio or silence).",
             "itemtype": "property",
             "name": "playing",
@@ -1242,11 +1342,12 @@
             "access": "public",
             "tagname": "",
             "readonly": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 100,
+            "line": 130,
             "description": "Plays a single audio alias, interrupting any current playback.",
             "itemtype": "method",
             "name": "play",
@@ -1264,11 +1365,12 @@
                     "type": "Function"
                 }
             ],
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 118,
+            "line": 148,
             "description": "Plays a list of audio files, timers, and/or functions, interrupting any current playback.\nAudio in the list will be preloaded to minimize pauses for loading.",
             "itemtype": "method",
             "name": "playList",
@@ -1286,21 +1388,23 @@
                     "type": "Function"
                 }
             ],
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 136,
+            "line": 166,
             "description": "Callback for when audio/timer is finished to advance to the next item in the list.",
             "itemtype": "method",
             "name": "_onAudioFinished",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 179,
+            "line": 209,
             "description": "The update callback used for silence timers and updating captions without active audio.\nThis method is bound to the VOPlayer instance.",
             "itemtype": "method",
             "name": "_update",
@@ -1313,11 +1417,12 @@
                     "type": "Int"
                 }
             ],
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 197,
+            "line": 227,
             "description": "The update callback used for updating captions with active audio.\nThis method is bound to the VOPlayer instance.",
             "itemtype": "method",
             "name": "_updateCaptionPos",
@@ -1330,48 +1435,58 @@
                     "type": "Int"
                 }
             ],
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 210,
+            "line": 240,
             "description": "Plays the current audio item and begins preloading the next item.",
             "itemtype": "method",
             "name": "_playAudio",
             "access": "private",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 260,
+            "line": 290,
             "description": "Stops playback of any audio/timer.",
             "itemtype": "method",
             "name": "stop",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 280,
+            "line": 310,
             "description": "Unloads all audio this VOPlayer has played. If trackAudio is false, this won't do anything.",
             "itemtype": "method",
             "name": "unloadPlayedAudio",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 291,
+            "line": 321,
             "description": "Cleans up this VOPlayer.",
             "itemtype": "method",
             "name": "destroy",
             "access": "public",
             "tagname": "",
-            "class": "cloudkid.VOPlayer"
+            "class": "VOPlayer",
+            "module": "cloudkid"
         }
     ],
-    "warnings": []
+    "warnings": [
+        {
+            "message": "Missing item type\n*  Array of SoundInst objects that are being faded in or out.\n\t*  @property {Array} _fades\n\t*  @private",
+            "line": " src/Sound.js:44"
+        }
+    ]
 }
