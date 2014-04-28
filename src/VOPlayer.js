@@ -1,3 +1,6 @@
+/**
+*  @module cloudkid
+*/
 (function() {
 
 	"use strict";
@@ -12,7 +15,6 @@
 	*	A class for managing audio by only playing one at a time, playing a list, and even
 	*	managing captions (CloudKidCaptions library) at the same time.
 	* 
-	*   @module cloudkid
 	*	@class VOPlayer
 	*	@constructor
 	*	@param {bool|cloudkid.Captions} [useCaptions=false] If a cloudkid.Captions object should be created for use 

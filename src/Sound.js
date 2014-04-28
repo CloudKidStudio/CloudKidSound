@@ -1,3 +1,6 @@
+/**
+*  @module cloudkid
+*/
 (function() {
 
 	"use strict";
@@ -12,7 +15,6 @@
 	*  Acts as a wrapper for SoundJS as well as adding lots of other functionality
 	*  for managing sounds.
 	*
-	*  @module cloudkid
 	*  @class Sound
 	*/
 	var Sound = function()
