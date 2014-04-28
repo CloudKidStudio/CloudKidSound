@@ -1,8 +1,19 @@
 (function() {
+
+	"use strict";
+
+	var OS = cloudkid.OS,
+		MediaLoader = cloudkid.MediaLoader,
+		LoadTask = cloudkid.LoadTask,
+		Task = cloudkid.Task,
+		TaskManager = cloudkid.TaskManager;
+
 	/**
 	*  Acts as a wrapper for SoundJS as well as adding lots of other functionality
 	*  for managing sounds.
-	*  @class cloudkid.Sound
+	*
+	*  @module cloudkid
+	*  @class Sound
 	*/
 	var Sound = function()
 	{
@@ -31,23 +42,27 @@
 	*/
 	p._sounds = null;
 	/** 
+	
 	*  Array of SoundInst objects that are being faded in or out.
 	*  @property {Array} _fades
 	*  @private
 	*/
 	p._fades = null;
+
 	/**
 	*  Array of SoundInst objects waiting to be used.
 	*  @property {Array} _pool
 	*  @private
 	*/
 	p._pool = null;
+
 	/**
 	*  The extension of the supported sound type that will be used.
 	*  @property {string} supportedSound
 	*  @public
 	*/
 	p.supportedSound = null;
+
 	/**
 	*  Dictionary of SoundContexts.
 	*  @property {object} _contexts
@@ -88,7 +103,7 @@
 	
 	/**
 	*  The singleton instance of Sound.
-	*  @property {cloudkid.Sound} instance
+	*  @property {Sound} instance
 	*  @public
 	*  @static
 	*/
@@ -234,7 +249,7 @@
 		{
 			this._fades.push(inst);
 			if(this._fades.length == 1)
-				cloudkid.OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
+				OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
 		}
 	};
 
@@ -279,7 +294,7 @@
 		{
 			this._fades.push(inst);
 			if(this._fades.length == 1)
-				cloudkid.OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
+				OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
 		}
 	};
 
@@ -332,7 +347,7 @@
 		}
 		fades.length = fades.length - trim;
 		if(fades.length === 0)
-			cloudkid.OS.instance.removeUpdateCallback(UPDATE_ALIAS);
+			OS.instance.removeUpdateCallback(UPDATE_ALIAS);
 	};
 	
 	/**
@@ -422,7 +437,7 @@
 			}
 			else
 				inst._startParams = [interrupt, delay, offset, loop, pan];
-			cloudkid.MediaLoader.instance.load(
+			MediaLoader.instance.load(
 				sound.src, //url to load
 				this._playAfterLoadBound,//complete callback
 				null,//progress callback
@@ -765,7 +780,7 @@
 		if(sound.state != UNLOADED) return;
 		sound.state = LOADING;
 		sound.preloadCallback = callback || null;
-		cloudkid.MediaLoader.instance.load(
+		MediaLoader.instance.load(
 			sound.src, //url to load
 			this._markLoaded,//complete callback
 			null,//progress callback
@@ -800,7 +815,7 @@
 				{
 					sound.state = LOADING;
 					//sound is passed last so that SoundJS gets the sound ID
-					tasks.push(new cloudkid.LoadTask(sound.id, sound.src, this._markLoaded, null, 0, sound));
+					tasks.push(new LoadTask(sound.id, sound.src, this._markLoaded, null, 0, sound));
 				}
 			}
 			else
@@ -810,16 +825,11 @@
 		}
 		if(tasks.length > 0)
 		{
-			var manager = new cloudkid.TaskManager(tasks);
-			var listener = function()
+			TaskManager.process(tasks, function()
 			{
-				manager.removeAllEventListeners();
-				manager.destroy();
 				if(callback)
 					callback();
-			};
-			manager.addEventListener(cloudkid.TaskManager.ALL_TASKS_DONE, listener);
-			manager.startAll();
+			});
 		}
 		else if(callback)
 		{
@@ -1034,10 +1044,10 @@
 	*/
 	SoundInst.prototype.stop = function()
 	{
-		var s = cloudkid.Sound.instance;
+		var s = Sound.instance;
 		var sound = s._sounds[this.alias];
 		sound.playing.splice(sound.playing.indexOf(this), 1);
-		cloudkid.Sound.instance._stopInst(this);
+		Sound.instance._stopInst(this);
 	};
 
 	/**
@@ -1092,7 +1102,7 @@
 
 	/**
 	*  A task for loading a list of sounds.. These can only
-	*  be created through cloudkid.Sound.instance.createPreloadTask().
+	*  be created through Sound.instance.createPreloadTask().
 	*  @class SoundListTask
 	*  @extends {cloudkid.Task}
 	*/
@@ -1102,8 +1112,8 @@
 		this.list = list;
 	};
 
-	SoundListTask.prototype = Object.create(cloudkid.Task.prototype);
-	SoundListTask.s = cloudkid.Task.prototype;
+	SoundListTask.prototype = Object.create(Task.prototype);
+	SoundListTask.s = Task.prototype;
 
 	SoundListTask.prototype.start = function(callback)
 	{

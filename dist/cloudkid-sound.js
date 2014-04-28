@@ -1,8 +1,19 @@
 (function() {
+
+	"use strict";
+
+	var OS = cloudkid.OS,
+		MediaLoader = cloudkid.MediaLoader,
+		LoadTask = cloudkid.LoadTask,
+		Task = cloudkid.Task,
+		TaskManager = cloudkid.TaskManager;
+
 	/**
 	*  Acts as a wrapper for SoundJS as well as adding lots of other functionality
 	*  for managing sounds.
-	*  @class cloudkid.Sound
+	*
+	*  @module cloudkid
+	*  @class Sound
 	*/
 	var Sound = function()
 	{
@@ -31,23 +42,27 @@
 	*/
 	p._sounds = null;
 	/** 
+	
 	*  Array of SoundInst objects that are being faded in or out.
 	*  @property {Array} _fades
 	*  @private
 	*/
 	p._fades = null;
+
 	/**
 	*  Array of SoundInst objects waiting to be used.
 	*  @property {Array} _pool
 	*  @private
 	*/
 	p._pool = null;
+
 	/**
 	*  The extension of the supported sound type that will be used.
 	*  @property {string} supportedSound
 	*  @public
 	*/
 	p.supportedSound = null;
+
 	/**
 	*  Dictionary of SoundContexts.
 	*  @property {object} _contexts
@@ -88,7 +103,7 @@
 	
 	/**
 	*  The singleton instance of Sound.
-	*  @property {cloudkid.Sound} instance
+	*  @property {Sound} instance
 	*  @public
 	*  @static
 	*/
@@ -234,7 +249,7 @@
 		{
 			this._fades.push(inst);
 			if(this._fades.length == 1)
-				cloudkid.OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
+				OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
 		}
 	};
 
@@ -279,7 +294,7 @@
 		{
 			this._fades.push(inst);
 			if(this._fades.length == 1)
-				cloudkid.OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
+				OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
 		}
 	};
 
@@ -332,7 +347,7 @@
 		}
 		fades.length = fades.length - trim;
 		if(fades.length === 0)
-			cloudkid.OS.instance.removeUpdateCallback(UPDATE_ALIAS);
+			OS.instance.removeUpdateCallback(UPDATE_ALIAS);
 	};
 	
 	/**
@@ -422,7 +437,7 @@
 			}
 			else
 				inst._startParams = [interrupt, delay, offset, loop, pan];
-			cloudkid.MediaLoader.instance.load(
+			MediaLoader.instance.load(
 				sound.src, //url to load
 				this._playAfterLoadBound,//complete callback
 				null,//progress callback
@@ -765,7 +780,7 @@
 		if(sound.state != UNLOADED) return;
 		sound.state = LOADING;
 		sound.preloadCallback = callback || null;
-		cloudkid.MediaLoader.instance.load(
+		MediaLoader.instance.load(
 			sound.src, //url to load
 			this._markLoaded,//complete callback
 			null,//progress callback
@@ -800,7 +815,7 @@
 				{
 					sound.state = LOADING;
 					//sound is passed last so that SoundJS gets the sound ID
-					tasks.push(new cloudkid.LoadTask(sound.id, sound.src, this._markLoaded, null, 0, sound));
+					tasks.push(new LoadTask(sound.id, sound.src, this._markLoaded, null, 0, sound));
 				}
 			}
 			else
@@ -810,16 +825,11 @@
 		}
 		if(tasks.length > 0)
 		{
-			var manager = new cloudkid.TaskManager(tasks);
-			var listener = function()
+			TaskManager.process(tasks, function()
 			{
-				manager.removeAllEventListeners();
-				manager.destroy();
 				if(callback)
 					callback();
-			};
-			manager.addEventListener(cloudkid.TaskManager.ALL_TASKS_DONE, listener);
-			manager.startAll();
+			});
 		}
 		else if(callback)
 		{
@@ -1034,10 +1044,10 @@
 	*/
 	SoundInst.prototype.stop = function()
 	{
-		var s = cloudkid.Sound.instance;
+		var s = Sound.instance;
 		var sound = s._sounds[this.alias];
 		sound.playing.splice(sound.playing.indexOf(this), 1);
-		cloudkid.Sound.instance._stopInst(this);
+		Sound.instance._stopInst(this);
 	};
 
 	/**
@@ -1092,7 +1102,7 @@
 
 	/**
 	*  A task for loading a list of sounds.. These can only
-	*  be created through cloudkid.Sound.instance.createPreloadTask().
+	*  be created through Sound.instance.createPreloadTask().
 	*  @class SoundListTask
 	*  @extends {cloudkid.Task}
 	*/
@@ -1102,8 +1112,8 @@
 		this.list = list;
 	};
 
-	SoundListTask.prototype = Object.create(cloudkid.Task.prototype);
-	SoundListTask.s = cloudkid.Task.prototype;
+	SoundListTask.prototype = Object.create(Task.prototype);
+	SoundListTask.s = Task.prototype;
 
 	SoundListTask.prototype.start = function(callback)
 	{
@@ -1155,20 +1165,39 @@
 	namespace('cloudkid').Sound = Sound;
 }());
 (function() {
+
+	"use strict";
+
+	// Class Imports, we'll actually include them in the constructor
+	// incase these classes were included after in the load-order
+	var Sound = cloudkid.Sound,
+		Captions,
+		OS; 
+
 	/**
 	*	A class for managing audio by only playing one at a time, playing a list, and even
 	*	managing captions (CloudKidCaptions library) at the same time.
-	*	@class cloudkid.VOPlayer
+	* 
+	*   @module cloudkid
+	*	@class VOPlayer
 	*	@constructor
-	*	@param {bool} useCaptions If a cloudkid.Captions object should be created for use.
+	*	@param {bool|cloudkid.Captions} [useCaptions=false] If a cloudkid.Captions object should be created for use 
+	*			or the captions object to use
 	*/
 	var VOPlayer = function(useCaptions)
 	{
+		// Import classes
+		Captions = cloudkid.Captions;
+		OS = cloudkid.OS;
+
 		this._audioListener = this._onAudioFinished.bind(this);
 		this._update = this._update.bind(this);
 		this._updateCaptionPos = this._updateCaptionPos.bind(this);
-		if(useCaptions)
-			this.captions = new cloudkid.Captions(null, true);
+		if (useCaptions)
+		{
+			this.captions = useCaptions instanceof Captions ? useCaptions : new Captions();
+			this.captions.isSlave = true;
+		}
 		this._listHelper = [];
 	};
 	
@@ -1180,54 +1209,63 @@
 	*	@public
 	*/
 	p.trackAudio = false;
+
 	/**
 	*	The current list of audio/silence times/functions. Generally you will not need to modify this.
 	*	@property {Array} audioList
 	*	@public
 	*/
 	p.audioList = null;
+
 	/**
 	*	The current position in audioList.
 	*	@property {int} _listCounter
 	*	@private
 	*/
 	p._listCounter = 0;
+
 	/**
 	*	The current audio alias being played.
 	*	@property {String} _currentAudio
 	*	@private
 	*/
 	p._currentAudio = null;
+
 	/**
 	*	The current audio instance being played.
 	*	@property {SoundInst} _audioInst
 	*	@private
 	*/
 	p._audioInst = null;
+
 	/**
 	*	The callback for when the list is finished.
 	*	@property {function} _callback
 	*	@private
 	*/
 	p._callback = null;
+
 	/**
 	*	The bound _onAudioFinished call.
 	*	@property {function} _audioListener
 	*	@private
 	*/
 	p._audioListener = null;
+
 	/**
 	*	A list of audio file played by this, so that they can be unloaded later.
 	*	@property {Array} _playedAudio
 	*	@private
 	*/
 	p._playedAudio = null;
+
 	/**
 	*	A timer for silence entries in the list, in milliseconds.
 	*	@property {int} _timer
 	*	@private
 	*/
 	p._timer = 0;
+
 	/**
 	*	The cloudkid.Captions object used for captions. The developer is responsible for initializing this with a captions
 	*	dictionary config file and a reference to a text field.
@@ -1235,12 +1273,14 @@
 	*	@public
 	*/
 	p.captions = null;
+
 	/**
 	*	An Array used when play() is called to avoid creating lots of Array objects.
 	*	@property {Array} _listHelper
 	*	@private
 	*/
 	p._listHelper = null;
+
 	
 	/**
 	*	If VOPlayer is currently playing (audio or silence).
@@ -1296,7 +1336,7 @@
 	*/
 	p._onAudioFinished = function()
 	{
-		cloudkid.OS.instance.removeUpdateCallback("VOPlayer");//remove any update callback
+		OS.instance.removeUpdateCallback("VOPlayer");//remove any update callback
 		if(this.captions && this._audioInst)//if we have captions and an audio instance, set the caption time to the length of the audio
 			this.captions.seek(this._audioInst.length);
 		this._audioInst = null;//clear the audio instance
@@ -1327,7 +1367,7 @@
 			{
 				this._timer = this._currentAudio;//set up a timer to wait
 				this._currentAudio = null;
-				cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._update);
+				OS.instance.addUpdateCallback("VOPlayer", this._update);
 			}
 		}
 	};
@@ -1382,21 +1422,21 @@
 				this._playedAudio = [this._currentAudio];
 			}
 		}
-		var s = cloudkid.Sound.instance;
+		var s = Sound.instance;
 		if(!s.exists(this._currentAudio) && this.captions && this.captions.hasCaption(this._currentAudio))
 		{
-			this.captions.run(this._currentAudio);
+			this.captions.play(this._currentAudio);
 			this._timer = this.captions.currentDuration;
 			this._currentAudio = null;
-			cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._update);
+			OS.instance.addUpdateCallback("VOPlayer", this._update);
 		}
 		else
 		{
 			this._audioInst = s.play(this._currentAudio, this._audioListener);
 			if(this.captions)
 			{
-				this.captions.run(this._currentAudio);
-				cloudkid.OS.instance.addUpdateCallback("VOPlayer", this._updateCaptionPos);
+				this.captions.play(this._currentAudio);
+				OS.instance.addUpdateCallback("VOPlayer", this._updateCaptionPos);
 			}
 		}
 		for(var i = this._listCounter + 1; i < this.audioList.length; ++i)
@@ -1422,13 +1462,13 @@
 	{
 		if(this._currentAudio)
 		{
-			cloudkid.Sound.instance.stop(this._currentAudio);
+			Sound.instance.stop(this._currentAudio);
 			this._currentAudio = null;
 			this._callback = null;
 		}
 		if(this.captions)
 			this.captions.stop();
-		cloudkid.OS.instance.removeUpdateCallback("VOPlayer");
+		OS.instance.removeUpdateCallback("VOPlayer");
 		this.audioList = null;
 		this._timer = 0;
 	};
@@ -1440,7 +1480,7 @@
 	*/
 	p.unloadPlayedAudio = function()
 	{
-		cloudkid.Sound.instance.unload(this._playedAudio);
+		Sound.instance.unload(this._playedAudio);
 		this._playedAudio = null;
 	};
 
