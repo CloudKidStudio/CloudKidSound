@@ -3,7 +3,7 @@
         "name": "CloudKid Sound API",
         "description": "CloudKid Sound API: A framework for Web Audio/Flash audio content built on top of CreateJS - SoundJS",
         "version": "2.0.0",
-        "logo": "cloudkid.png"
+        "logo": ""
     },
     "files": {
         "src/Sound.js": {
