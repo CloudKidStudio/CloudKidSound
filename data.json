@@ -2,7 +2,7 @@
     "project": {
         "name": "CloudKid Sound API",
         "description": "CloudKid Sound API: A framework for Web Audio/Flash audio content built on top of CreateJS - SoundJS",
-        "version": "2.0.1",
+        "version": "2.1.0",
         "logo": ""
     },
     "files": {
@@ -1274,6 +1274,18 @@
         {
             "file": "src/VOPlayer.js",
             "line": 84,
+            "description": "The callback for when the list is interrupted for any reason.",
+            "itemtype": "property",
+            "name": "_cancelledCallback",
+            "type": "Function",
+            "access": "private",
+            "tagname": "",
+            "class": "VOPlayer",
+            "module": "cloudkid"
+        },
+        {
+            "file": "src/VOPlayer.js",
+            "line": 91,
             "description": "The bound _onAudioFinished call.",
             "itemtype": "property",
             "name": "_audioListener",
@@ -1285,7 +1297,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 91,
+            "line": 98,
             "description": "A list of audio file played by this, so that they can be unloaded later.",
             "itemtype": "property",
             "name": "_playedAudio",
@@ -1297,7 +1309,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 98,
+            "line": 105,
             "description": "A timer for silence entries in the list, in milliseconds.",
             "itemtype": "property",
             "name": "_timer",
@@ -1309,7 +1321,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 105,
+            "line": 112,
             "description": "The cloudkid.Captions object used for captions. The developer is responsible for initializing this with a captions\ndictionary config file and a reference to a text field.",
             "itemtype": "property",
             "name": "captions",
@@ -1321,7 +1333,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 113,
+            "line": 120,
             "description": "An Array used when play() is called to avoid creating lots of Array objects.",
             "itemtype": "property",
             "name": "_listHelper",
@@ -1333,7 +1345,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 121,
+            "line": 128,
             "description": "If VOPlayer is currently playing (audio or silence).",
             "itemtype": "property",
             "name": "playing",
@@ -1346,7 +1358,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 132,
+            "line": 139,
             "description": "Plays a single audio alias, interrupting any current playback.",
             "itemtype": "method",
             "name": "play",
@@ -1362,6 +1374,11 @@
                     "name": "callback",
                     "description": "The function to call when playback is complete.",
                     "type": "Function"
+                },
+                {
+                    "name": "cancelledCallback",
+                    "description": "The function to call when playback is interrupted with a stop(), play() or playList() call.",
+                    "type": "Function"
                 }
             ],
             "class": "VOPlayer",
@@ -1369,7 +1386,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 150,
+            "line": 159,
             "description": "Plays a list of audio files, timers, and/or functions, interrupting any current playback.\nAudio in the list will be preloaded to minimize pauses for loading.",
             "itemtype": "method",
             "name": "playList",
@@ -1385,6 +1402,11 @@
                     "name": "callback",
                     "description": "The function to call when playback is complete.",
                     "type": "Function"
+                },
+                {
+                    "name": "cancelledCallback",
+                    "description": "The function to call when playback is interrupted with a stop(), play() or playList() call.",
+                    "type": "Function"
                 }
             ],
             "class": "VOPlayer",
@@ -1392,7 +1414,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 168,
+            "line": 179,
             "description": "Callback for when audio/timer is finished to advance to the next item in the list.",
             "itemtype": "method",
             "name": "_onAudioFinished",
@@ -1403,7 +1425,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 211,
+            "line": 223,
             "description": "The update callback used for silence timers and updating captions without active audio.\nThis method is bound to the VOPlayer instance.",
             "itemtype": "method",
             "name": "_update",
@@ -1421,7 +1443,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 229,
+            "line": 241,
             "description": "The update callback used for updating captions with active audio.\nThis method is bound to the VOPlayer instance.",
             "itemtype": "method",
             "name": "_updateCaptionPos",
@@ -1439,7 +1461,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 242,
+            "line": 254,
             "description": "Plays the current audio item and begins preloading the next item.",
             "itemtype": "method",
             "name": "_playAudio",
@@ -1450,7 +1472,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 292,
+            "line": 304,
             "description": "Stops playback of any audio/timer.",
             "itemtype": "method",
             "name": "stop",
@@ -1461,7 +1483,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 312,
+            "line": 327,
             "description": "Unloads all audio this VOPlayer has played. If trackAudio is false, this won't do anything.",
             "itemtype": "method",
             "name": "unloadPlayedAudio",
@@ -1472,7 +1494,7 @@
         },
         {
             "file": "src/VOPlayer.js",
-            "line": 323,
+            "line": 338,
             "description": "Cleans up this VOPlayer.",
             "itemtype": "method",
             "name": "destroy",

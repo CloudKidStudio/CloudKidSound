@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/png" href="../assets/favicon.ico">
     <script src="http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js"></script>
-	<title>CloudKid Sound API v2.0.1 API Documentation : VOPlayer</title>  
+	<title>CloudKid Sound API v2.1.0 API Documentation : VOPlayer</title>  
 </head>
 <body class="yui3-skin-sam">
 
@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 2.0.1</em>
+            <em>API Documentation for: 2.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -331,6 +331,13 @@ managing captions (CloudKidCaptions library) at the same time.</p>
                             </li>
                         
                             <li class="index-item property private">
+                                <a href="#property__cancelledCallback">_cancelledCallback</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
                                 <a href="#property__currentAudio">_currentAudio</a>
 
                                 
@@ -441,7 +448,7 @@ managing captions (CloudKidCaptions library) at the same time.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l168"><code>_onAudioFinished:168</code></a>
+        <a href="../files/src_VOPlayer.js.html#l179"><code>_onAudioFinished:179</code></a>
         
         </p>
 
@@ -498,7 +505,7 @@ managing captions (CloudKidCaptions library) at the same time.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l242"><code>_playAudio:242</code></a>
+        <a href="../files/src_VOPlayer.js.html#l254"><code>_playAudio:254</code></a>
         
         </p>
 
@@ -565,7 +572,7 @@ managing captions (CloudKidCaptions library) at the same time.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l211"><code>_update:211</code></a>
+        <a href="../files/src_VOPlayer.js.html#l223"><code>_update:223</code></a>
         
         </p>
 
@@ -657,7 +664,7 @@ This method is bound to the VOPlayer instance.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l229"><code>_updateCaptionPos:229</code></a>
+        <a href="../files/src_VOPlayer.js.html#l241"><code>_updateCaptionPos:241</code></a>
         
         </p>
 
@@ -739,7 +746,7 @@ This method is bound to the VOPlayer instance.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l323"><code>destroy:323</code></a>
+        <a href="../files/src_VOPlayer.js.html#l338"><code>destroy:338</code></a>
         
         </p>
 
@@ -781,6 +788,12 @@ This method is bound to the VOPlayer instance.</p>
                     
                 </li>
             
+                <li class="arg">
+                    
+                        <code>cancelledCallback</code>
+                    
+                </li>
+            
             </ul><span class="paren">)</span>
         </div>
     
@@ -812,7 +825,7 @@ This method is bound to the VOPlayer instance.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l132"><code>play:132</code></a>
+        <a href="../files/src_VOPlayer.js.html#l139"><code>play:139</code></a>
         
         </p>
 
@@ -865,6 +878,22 @@ This method is bound to the VOPlayer instance.</p>
                     
                 </li>
             
+                <li class="param">
+                    
+                        <code class="param-name">cancelledCallback</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The function to call when playback is interrupted with a stop(), play() or playList() call.</p>
+
+                    </div>
+
+                    
+                </li>
+            
             </ul>
         </div>
     
@@ -891,6 +920,12 @@ This method is bound to the VOPlayer instance.</p>
                 <li class="arg">
                     
                         <code>callback</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cancelledCallback</code>
                     
                 </li>
             
@@ -925,7 +960,7 @@ This method is bound to the VOPlayer instance.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l150"><code>playList:150</code></a>
+        <a href="../files/src_VOPlayer.js.html#l159"><code>playList:159</code></a>
         
         </p>
 
@@ -979,6 +1014,22 @@ Audio in the list will be preloaded to minimize pauses for loading.</p>
                     
                 </li>
             
+                <li class="param">
+                    
+                        <code class="param-name">cancelledCallback</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The function to call when playback is interrupted with a stop(), play() or playList() call.</p>
+
+                    </div>
+
+                    
+                </li>
+            
             </ul>
         </div>
     
@@ -1023,7 +1074,7 @@ Audio in the list will be preloaded to minimize pauses for loading.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l292"><code>stop:292</code></a>
+        <a href="../files/src_VOPlayer.js.html#l304"><code>stop:304</code></a>
         
         </p>
 
@@ -1080,7 +1131,7 @@ Audio in the list will be preloaded to minimize pauses for loading.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l312"><code>unloadPlayedAudio:312</code></a>
+        <a href="../files/src_VOPlayer.js.html#l327"><code>unloadPlayedAudio:327</code></a>
         
         </p>
 
@@ -1183,7 +1234,7 @@ Audio in the list will be preloaded to minimize pauses for loading.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l84"><code>_audioListener:84</code></a>
+        <a href="../files/src_VOPlayer.js.html#l91"><code>_audioListener:91</code></a>
         
         </p>
 
@@ -1241,6 +1292,53 @@ Audio in the list will be preloaded to minimize pauses for loading.</p>
 
     <div class="description">
         <p>The callback for when the list is finished.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__cancelledCallback" class="property item private">
+    <h3 class="name"><code>_cancelledCallback</code></h3>
+    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_VOPlayer.js.html#l84"><code>_cancelledCallback:84</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The callback for when the list is interrupted for any reason.</p>
 
     </div>
 
@@ -1371,7 +1469,7 @@ Audio in the list will be preloaded to minimize pauses for loading.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l113"><code>_listHelper:113</code></a>
+        <a href="../files/src_VOPlayer.js.html#l120"><code>_listHelper:120</code></a>
         
         </p>
 
@@ -1418,7 +1516,7 @@ Audio in the list will be preloaded to minimize pauses for loading.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l91"><code>_playedAudio:91</code></a>
+        <a href="../files/src_VOPlayer.js.html#l98"><code>_playedAudio:98</code></a>
         
         </p>
 
@@ -1465,7 +1563,7 @@ Audio in the list will be preloaded to minimize pauses for loading.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l98"><code>_timer:98</code></a>
+        <a href="../files/src_VOPlayer.js.html#l105"><code>_timer:105</code></a>
         
         </p>
 
@@ -1559,7 +1657,7 @@ Audio in the list will be preloaded to minimize pauses for loading.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l105"><code>captions:105</code></a>
+        <a href="../files/src_VOPlayer.js.html#l112"><code>captions:112</code></a>
         
         </p>
 
@@ -1607,7 +1705,7 @@ dictionary config file and a reference to a text field.</p>
             
         
         
-        <a href="../files/src_VOPlayer.js.html#l121"><code>playing:121</code></a>
+        <a href="../files/src_VOPlayer.js.html#l128"><code>playing:128</code></a>
         
         </p>
 
