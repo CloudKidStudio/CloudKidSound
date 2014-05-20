@@ -1,3 +1,6 @@
+/**
+*  @module cloudkid
+*/
 (function() {
 
 	"use strict";
@@ -12,7 +15,6 @@
 	*  Acts as a wrapper for SoundJS as well as adding lots of other functionality
 	*  for managing sounds.
 	*
-	*  @module cloudkid
 	*  @class Sound
 	*/
 	var Sound = function()
@@ -1164,12 +1166,15 @@
 	
 	namespace('cloudkid').Sound = Sound;
 }());
+/**
+*  @module cloudkid
+*/
 (function() {
 
 	"use strict";
 
 	// Class Imports, we'll actually include them in the constructor
-	// incase these classes were included after in the load-order
+	// in case these classes were included after in the load-order
 	var Sound = cloudkid.Sound,
 		Captions,
 		OS; 
@@ -1178,7 +1183,6 @@
 	*	A class for managing audio by only playing one at a time, playing a list, and even
 	*	managing captions (CloudKidCaptions library) at the same time.
 	* 
-	*   @module cloudkid
 	*	@class VOPlayer
 	*	@constructor
 	*	@param {bool|cloudkid.Captions} [useCaptions=false] If a cloudkid.Captions object should be created for use 
@@ -1246,6 +1250,13 @@
 	p._callback = null;
 
 	/**
+	*	The callback for when the list is interrupted for any reason.
+	*	@property {function} _cancelledCallback
+	*	@private
+	*/
+	p._cancelledCallback = null;
+
+	/**
 	*	The bound _onAudioFinished call.
 	*	@property {function} _audioListener
 	*	@private
@@ -1299,8 +1310,9 @@
 	*	@public
 	*	@param {String} id The alias of the audio file to play.
 	*	@param {function} callback The function to call when playback is complete.
+	*	@param {function} cancelledCallback The function to call when playback is interrupted with a stop(), play() or playList() call.
 	*/
-	p.play = function(id, callback)
+	p.play = function(id, callback, cancelledCallback)
 	{
 		this.stop();
 		
@@ -1308,6 +1320,7 @@
 		this._listHelper[0] = id;
 		this.audioList = this._listHelper;
 		this._callback = callback;
+		this._cancelledCallback = cancelledCallback;
 		this._onAudioFinished();
 	};
 	
@@ -1318,14 +1331,16 @@
 	*	@public
 	*	@param {Array} list The array of items to play/call in order.
 	*	@param {function} callback The function to call when playback is complete.
+	*	@param {function} cancelledCallback The function to call when playback is interrupted with a stop(), play() or playList() call.
 	*/
-	p.playList = function(list, callback)
+	p.playList = function(list, callback, cancelledCallback)
 	{
 		this.stop();
 
 		this._listCounter = -1;
 		this.audioList = list;
 		this._callback = callback;
+		this._cancelledCallback = cancelledCallback;
 		this._onAudioFinished();
 	};
 	
@@ -1346,6 +1361,7 @@
 			if(this.captions)
 				this.captions.stop();
 			this._currentAudio = null;
+			this._cancelledCallback = null;
 			var c = this._callback;
 			this._callback = null;
 			if(c) c();
@@ -1464,13 +1480,16 @@
 		{
 			Sound.instance.stop(this._currentAudio);
 			this._currentAudio = null;
-			this._callback = null;
 		}
 		if(this.captions)
 			this.captions.stop();
 		OS.instance.removeUpdateCallback("VOPlayer");
 		this.audioList = null;
 		this._timer = 0;
+		this._callback = null;
+		var c = this._cancelledCallback;
+		this._cancelledCallback = null;
+		if (c) c();
 	};
 
 	/**
@@ -1497,6 +1516,7 @@
 		this._currentAudio = null;
 		this._audioInst = null;
 		this._callback = null;
+		this._cancelledCallback = null;
 		this._audioListener = null;
 		this._playedAudio = null;
 		if(this.captions)

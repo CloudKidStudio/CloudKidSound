@@ -266,21 +266,21 @@
         this.captions.isSlave = !0), this._listHelper = [];
     }, p = VOPlayer.prototype = {};
     p.trackAudio = !1, p.audioList = null, p._listCounter = 0, p._currentAudio = null, 
-    p._audioInst = null, p._callback = null, p._audioListener = null, p._playedAudio = null, 
-    p._timer = 0, p.captions = null, p._listHelper = null, Object.defineProperty(p, "playing", {
+    p._audioInst = null, p._callback = null, p._cancelledCallback = null, p._audioListener = null, 
+    p._playedAudio = null, p._timer = 0, p.captions = null, p._listHelper = null, Object.defineProperty(p, "playing", {
         get: function() {
             return null !== this._currentAudio || this._timer > 0;
         }
-    }), p.play = function(id, callback) {
+    }), p.play = function(id, callback, cancelledCallback) {
         this.stop(), this._listCounter = -1, this._listHelper[0] = id, this.audioList = this._listHelper, 
-        this._callback = callback, this._onAudioFinished();
-    }, p.playList = function(list, callback) {
+        this._callback = callback, this._cancelledCallback = cancelledCallback, this._onAudioFinished();
+    }, p.playList = function(list, callback, cancelledCallback) {
         this.stop(), this._listCounter = -1, this.audioList = list, this._callback = callback, 
-        this._onAudioFinished();
+        this._cancelledCallback = cancelledCallback, this._onAudioFinished();
     }, p._onAudioFinished = function() {
         if (OS.instance.removeUpdateCallback("VOPlayer"), this.captions && this._audioInst && this.captions.seek(this._audioInst.length), 
         this._audioInst = null, this._listCounter++, this._listCounter >= this.audioList.length) {
-            this.captions && this.captions.stop(), this._currentAudio = null;
+            this.captions && this.captions.stop(), this._currentAudio = null, this._cancelledCallback = null;
             var c = this._callback;
             this._callback = null, c && c();
         } else this._currentAudio = this.audioList[this._listCounter], "string" == typeof this._currentAudio ? this._playAudio() : "function" == typeof this._currentAudio ? (this._currentAudio(), 
@@ -304,14 +304,16 @@
             }
         }
     }, p.stop = function() {
-        this._currentAudio && (Sound.instance.stop(this._currentAudio), this._currentAudio = null, 
-        this._callback = null), this.captions && this.captions.stop(), OS.instance.removeUpdateCallback("VOPlayer"), 
-        this.audioList = null, this._timer = 0;
+        this._currentAudio && (Sound.instance.stop(this._currentAudio), this._currentAudio = null), 
+        this.captions && this.captions.stop(), OS.instance.removeUpdateCallback("VOPlayer"), 
+        this.audioList = null, this._timer = 0, this._callback = null;
+        var c = this._cancelledCallback;
+        this._cancelledCallback = null, c && c();
     }, p.unloadPlayedAudio = function() {
         Sound.instance.unload(this._playedAudio), this._playedAudio = null;
     }, p.destroy = function() {
         this.stop(), this.audioList = null, this._listHelper = null, this._currentAudio = null, 
-        this._audioInst = null, this._callback = null, this._audioListener = null, this._playedAudio = null, 
-        this.captions && (this.captions.destroy(), this.captions = null);
+        this._audioInst = null, this._callback = null, this._cancelledCallback = null, this._audioListener = null, 
+        this._playedAudio = null, this.captions && (this.captions.destroy(), this.captions = null);
     }, namespace("cloudkid").VOPlayer = VOPlayer;
 }();
