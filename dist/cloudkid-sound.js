@@ -144,7 +144,8 @@
 				waitingToPlay: [],
 				context: s.context || defaultContext,
 				playAfterLoad: false,
-				preloadCallback: null
+				preloadCallback: null,
+				data:s//save data for potential use by SoundJS plugins
 			};
 			if(temp.context)
 			{
@@ -408,6 +409,8 @@
 			else
 			{
 				inst = this._getSoundInst(channel, sound.id);
+				if(channel.handleExtraData)
+					channel.handleExtraData(sound.data);
 				inst.curVol = volume;
 				sound.playing.push(inst);
 				inst._endCallback = completeCallback;
@@ -531,6 +534,8 @@
 			{
 				sound.playing.push(inst);
 				inst._channel = channel;
+				if(channel.handleExtraData)
+					channel.handleExtraData(sound.data);
 				inst.length = channel.getDuration();
 				inst.updateVolume();
 				channel.addEventListener("complete", inst._endFunc);

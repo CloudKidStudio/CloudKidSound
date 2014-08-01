@@ -26,7 +26,8 @@
                 waitingToPlay: [],
                 context: s.context || defaultContext,
                 playAfterLoad: !1,
-                preloadCallback: null
+                preloadCallback: null,
+                data: s
             };
             temp.context && (this._contexts[temp.context] || (this._contexts[temp.context] = new SoundContext(temp.context)), 
             this._contexts[temp.context].sounds.push(temp));
@@ -94,8 +95,9 @@
         if (volume = "number" == typeof volume && volume > 0 ? volume : sound.volume, state == LOADED) {
             var channel = createjs.Sound.play(alias, interrupt, delay, offset, loop, volume, pan);
             return channel && channel.playState != createjs.Sound.PLAY_FAILED ? (inst = this._getSoundInst(channel, sound.id), 
-            inst.curVol = volume, sound.playing.push(inst), inst._endCallback = completeCallback, 
-            inst.updateVolume(), inst.length = channel.getDuration(), inst._channel.addEventListener("complete", inst._endFunc), 
+            channel.handleExtraData && channel.handleExtraData(sound.data), inst.curVol = volume, 
+            sound.playing.push(inst), inst._endCallback = completeCallback, inst.updateVolume(), 
+            inst.length = channel.getDuration(), inst._channel.addEventListener("complete", inst._endFunc), 
             startCallback && setTimeout(startCallback, 0), inst) : (completeCallback && completeCallback(), 
             null);
         }
@@ -120,9 +122,10 @@
             for (var waiting = sound.waitingToPlay, i = 0; i < waiting.length; ++i) {
                 var inst = waiting[i], startParams = inst._startParams, volume = inst.curVol, channel = createjs.Sound.play(alias, startParams[0], startParams[1], startParams[2], startParams[3], volume, startParams[4]);
                 channel && channel.playState != createjs.Sound.PLAY_FAILED ? (sound.playing.push(inst), 
-                inst._channel = channel, inst.length = channel.getDuration(), inst.updateVolume(), 
-                channel.addEventListener("complete", inst._endFunc), inst._startFunc && inst._startFunc(), 
-                inst.paused && channel.pause()) : (inst._endCallback && inst._endCallback(), this._poolInst(inst));
+                inst._channel = channel, channel.handleExtraData && channel.handleExtraData(sound.data), 
+                inst.length = channel.getDuration(), inst.updateVolume(), channel.addEventListener("complete", inst._endFunc), 
+                inst._startFunc && inst._startFunc(), inst.paused && channel.pause()) : (inst._endCallback && inst._endCallback(), 
+                this._poolInst(inst));
             }
             waiting.length = 0;
         }
