@@ -1185,11 +1185,7 @@
 		SoundListTask = function(id, list, callback)
 		{
 			this.initialize(id, callback);
-			/**
-			*	The list of sound aliases.
-			*	@public
-			*	@property {Array} list The list of sound aliases to load.
-			*/
+			
 			this.list = list;
 		};
 
