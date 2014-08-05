@@ -1,13 +1,30 @@
 !function() {
     "use strict";
+    function _playEmpty() {
+        document.removeEventListener("touchstart", _playEmpty), createjs.WebAudioPlugin.playEmptySound();
+    }
     var OS = cloudkid.OS, MediaLoader = cloudkid.MediaLoader, LoadTask = cloudkid.LoadTask, Task = cloudkid.Task, TaskManager = cloudkid.TaskManager, Sound = function() {
         this._sounds = {}, this._fades = [], this._contexts = {}, this._pool = [], this._update = this._update.bind(this), 
         this._markLoaded = this._markLoaded.bind(this), this._playAfterLoadBound = this._playAfterLoad.bind(this);
     }, p = Sound.prototype = {}, _instance = null;
     p._sounds = null, p._fades = null, p._pool = null, p.supportedSound = null, p._contexts = null;
     var UNLOADED = 0, LOADING = 1, LOADED = 2, UPDATE_ALIAS = "CKSOUND";
-    Sound.UNHANDLED = "unhandled", Sound.init = function(supportedSound, config) {
-        _instance = new Sound(), _instance.supportedSound = supportedSound, config && _instance.loadConfig(config);
+    Sound.UNHANDLED = "unhandled", Sound.init = function(pluginOrder, filetypeOrder, completeCallback) {
+        return createjs.Sound.registerPlugins(pluginOrder), createjs.Sound.BrowserDetect.isIOS && document.addEventListener("touchstart", _playEmpty), 
+        _instance = new Sound(), createjs.Sound.getCapabilities() ? _instance._initComplete(filetypeOrder, completeCallback) : createjs.Sound.activePlugin ? (Debug.log("SoundJS Plugin " + createjs.Sound.activePlugin + " was not ready, waiting until it is"), 
+        cloudkid.OS.instance.addUpdateCallback("SoundInit", function() {
+            createjs.Sound.getCapabilities() && (cloudkid.OS.instance.removeUpdateCallback("SoundInit"), 
+            _instance._initComplete(filetypeOrder, completeCallback));
+        })) : Debug.error("Unable to initialize SoundJS with a plugin!"), _instance;
+    }, p._initComplete = function(filetypeOrder, callback) {
+        if (createjs.FlashPlugin && createjs.Sound.activePlugin instanceof createjs.FlashPlugin) _instance.supportedSound = ".mp3"; else for (var i = 0; i < filetypeOrder.length; ++i) {
+            var type = filetypeOrder[i];
+            if (createjs.Sound.getCapability(type)) {
+                _instance.supportedSound = "." + type;
+                break;
+            }
+        }
+        callback && callback();
     }, Object.defineProperty(Sound, "instance", {
         get: function() {
             return _instance;
@@ -206,7 +223,7 @@
         var callback = sound.preloadCallback;
         callback && (sound.preloadCallback = null, callback());
     }, p.createPreloadTask = function(id, list, callback) {
-        return new SoundListTask(id, list, callback);
+        return SoundListTask ? new SoundListTask(id, list, callback) : null;
     }, p.unload = function(list) {
         if (list) for (var i = 0, len = list.length; len > i; ++i) {
             var sound = this._sounds[list[i]];
@@ -247,15 +264,15 @@
     }, SoundInst.prototype.unpause = function() {
         this.paused && (this.paused = !1, this._channel && this._channel.resume());
     };
-    var SoundListTask = function(id, list, callback) {
+    var SoundListTask;
+    Task && (SoundListTask = function(id, list, callback) {
         this.initialize(id, callback), this.list = list;
-    };
-    SoundListTask.prototype = Object.create(Task.prototype), SoundListTask.s = Task.prototype, 
+    }, SoundListTask.prototype = Object.create(Task.prototype), SoundListTask.s = Task.prototype, 
     SoundListTask.prototype.start = function(callback) {
         _instance.preload(this.list, callback);
     }, SoundListTask.prototype.destroy = function() {
         SoundListTask.s.destroy.apply(this), this.list = null;
-    };
+    });
     var SoundContext = function(id) {
         this.id = id, this.volume = 1, this.muted = !1, this.sounds = [];
     };

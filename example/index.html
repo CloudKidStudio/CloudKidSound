@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>CloudKidAudio Test Example</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		
+		<link rel="stylesheet" href="css/normalize.min.css">
+		<link rel="stylesheet" href="css/sprite.css">		
+
+		<script src="libs/jquery/dist/jquery.min.js"></script>
+		<script src="libs/easeljs/lib/easeljs.min.js"></script>
+		<script src="libs/preloadjs/lib/preloadjs.min.js"></script>
+		<script src="libs/cloudkid-debug/dist/cloudkid-debug.js"></script>
+		<script src="libs/cloudkid-namespace/namespace.js"></script>
+		<script src="libs/soundjs/lib/soundjs.min.js"></script>
+		<script src="libs/soundjs/lib/flashplugin.min.js"></script>
+		<script src="libs/cloudkid-os/dist/cloudkid-os-createjs.min.js"></script>
+		<script src="../dist/cloudkid-sound.js"></script>
+		<script src="js/Sprite.js"></script>
+
+ 	</head>
+	<body class="unloaded">
+		<div class="controlsFrame">
+			<div class="controls">
+				<h1>Controls</h1>
+				<ul>				
+					<li><button data-action="stop" class="control disabled" disabled>Stop</button></li>
+					<li><button data-action="pauseAll" class="control disabled" disabled>Pause</button></li>
+					<li><button data-action="unpauseAll" class="control disabled" disabled>Unpause</button></li>
+					<li><button data-action="mute" class="control disabled" disabled>Mute</button></li>
+					<li><button data-action="unmute" class="control disabled" disabled>Unmute</button></li>
+				</ul>
+				<br style="clear:both">
+			</div>
+		</div>
+		<div class="voplayer">
+			<h1>VOPlayer</h1>
+			<button data-action="clear" id="clearList" class="voControl disabled" disabled>Clear List</button>
+			<button data-action="play" id="playList" class="voControl disabled" disabled>Play List</button>
+			<button data-action="add" id="addToggle" class="voControl disabled" disabled>Add to List</button>
+			<ul id="playerList"></ul>
+		</div>
+		<div class="aliases">
+			<h1>Aliases</h1>
+			<button data-action="loop" id="loopToggle" class="loop disabled" disabled>Loop</button>
+			<br style="clear:both">
+			<ul id="aliases"></ul>
+			<br style="clear:both">
+		</div>
+		<canvas id="stage"></canvas>
+	</body>
+</html>

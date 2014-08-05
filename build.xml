@@ -91,17 +91,12 @@
 		</sequential>
 	</macrodef>
 	
-	<target name="import-libs" description="Copy the files specified in dependencies.txt to libs.dir">
-		<fail unless="libs.dir" message="libs.dir needs to be specified in build.properties as the location to put external library SWC files" />
-		<fail unless="libs.root.dir" message="libs.root.dir needs to be specified in build.properties as the root directory that all external libraries are in" />
-		<fail unless="libs.imports" message="libs.imports needs to be specified in build.properties as the directory to output built files to" />
-		<copy todir="${libs.dir}" flatten="true" overwrite="true">
-			<fileset dir="${libs.root.dir}">
-				<patternset>
-					<includesfile name="${libs.imports}" />
-				</patternset>
-			</fileset>
-		</copy>
+	<target name="import-example-libs" description="Copy the files specified in dependencies.txt to examples project">
+		<fail unless="libs" message="libs needs to be specified in build.properties as the bower libs to install" />
+		<exec executable="${bower}" failonerror="true">
+			<arg line="install" />
+			<arg line="${libs}" />
+		</exec>
 	</target>
 	
 	<macrodef name="docs-config">

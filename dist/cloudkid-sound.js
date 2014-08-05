@@ -39,7 +39,7 @@
 	
 	/** 
 	*  Dictionary of sound objects, containing configuration info and playback objects.
-	*  @property {object} _sounds
+	*  @property {Object} _sounds
 	*  @private
 	*/
 	p._sounds = null;
@@ -67,7 +67,7 @@
 
 	/**
 	*  Dictionary of SoundContexts.
-	*  @property {object} _contexts
+	*  @property {Object} _contexts
 	*  @private
 	*/
 	p._contexts = null;
@@ -89,18 +89,79 @@
 	Sound.UNHANDLED = "unhandled";
 	
 	/**
-	*	Initializes the Sound singleton.
+	*	Initializes the Sound singleton. If using createjs.FlashPlugin, you will be responsible for setting
+	*	createjs.FlashPlugin.BASE_PATH.
 	*	@method init
 	*	@static
-	*	@param {String} supportedSound The extension of the sound file type to use.
-	*	@param {object} config An optional sound config object to load.
+	*	@param {Array} pluginOrder The SoundJS plugins to pass to createjs.Sound.registerPlugins().
+	*	@param {Array} filetypeOrder The order in which file types are preferred, where "ogg" becomes a ".ogg"
+	*					extension on all sound file urls.
+	*	@param {Function} completeCallback A function to call when initialization is complete.
 	*/
-	Sound.init = function(supportedSound, config)
+	Sound.init = function(pluginOrder, filetypeOrder, completeCallback)
 	{
+		createjs.Sound.registerPlugins(pluginOrder);
+
+		//If on iOS, then we need to add a touch listener to unmute sounds.
+		//playback pretty much has to be createjs.WebAudioPlugin for iOS
+		if(createjs.Sound.BrowserDetect.isIOS)
+		{
+			document.addEventListener("touchstart", _playEmpty);
+		}
+
 		_instance = new Sound();
-		_instance.supportedSound = supportedSound;
-		if(config)
-			_instance.loadConfig(config);
+		
+		//make sure the capabilities are ready (looking at you, Cordova plugin)
+		if(createjs.Sound.getCapabilities())
+		{
+			_instance._initComplete(filetypeOrder, completeCallback);
+		}
+		else if(createjs.Sound.activePlugin)
+		{
+			if(true)
+			{
+				Debug.log("SoundJS Plugin " + createjs.Sound.activePlugin + " was not ready, waiting until it is");
+			}
+			//if the sound plugin is not ready, then just wait until it is
+			cloudkid.OS.instance.addUpdateCallback("SoundInit", function()
+				{
+					if(createjs.Sound.getCapabilities())
+					{
+						cloudkid.OS.instance.removeUpdateCallback("SoundInit");
+						_instance._initComplete(filetypeOrder, completeCallback);
+					}
+				});
+		}
+		else
+			Debug.error("Unable to initialize SoundJS with a plugin!");
+
+		return _instance;
+	};
+
+	function _playEmpty()
+	{
+		document.removeEventListener("touchstart", _playEmpty);
+		createjs.WebAudioPlugin.playEmptySound();
+	}
+
+	p._initComplete = function(filetypeOrder, callback)
+	{
+		if(createjs.FlashPlugin && createjs.Sound.activePlugin instanceof createjs.FlashPlugin)
+			_instance.supportedSound = ".mp3";
+		else
+		{
+			for(var i = 0; i < filetypeOrder.length; ++i)
+			{
+				var type = filetypeOrder[i];
+				if(createjs.Sound.getCapability(type))
+				{
+					_instance.supportedSound = "." + type;
+					break;
+				}
+			}
+		}
+		if(callback)
+			callback();
 	};
 	
 	/**
@@ -115,10 +176,10 @@
 	});
 	
 	/**
-	*	Loads a config object.
+	*	Loads a config object. This should not be called until after Sound.init() is complete.
 	*	@method loadConfig
 	*	@public
-	*	@param {object} config The config to load.
+	*	@param {Object} config The config to load.
 	*	@param {String} defaultContext The optional sound context to load sounds into unless 
 	*		otherwise specified. Sounds do not require a context.
 	*/
@@ -596,7 +657,7 @@
 	*	Stops all playing SoundInsts for a sound.
 	*	@method _stopSound
 	*	@private
-	*	@param {object} s The sound (from the _sounds dictionary) to stop.
+	*	@param {Object} s The sound (from the _sounds dictionary) to stop.
 	*/
 	p._stopSound = function(s)
 	{
@@ -876,9 +937,11 @@
 	*	@param {String} id The id of the task.
 	*	@param {Array} list An array of sound aliases to load.
 	*	@param {function} callback The function to call when the task is complete.
+	*	@return {cloudkid.Task} A task to load up all of the sounds in the list.
 	*/
 	p.createPreloadTask = function(id, list, callback)
 	{
+		if(!SoundListTask) return null;
 		return new SoundListTask(id, list, callback);
 	};
 	
@@ -1107,31 +1170,36 @@
 		this._channel.resume();
 	};
 
-	/**
-	*  A task for loading a list of sounds.. These can only
-	*  be created through Sound.instance.createPreloadTask().
-	*  @class SoundListTask
-	*  @extends {cloudkid.Task}
-	*/
-	var SoundListTask = function(id, list, callback)
+	//As use of the Task library isn't required, creating this class is optional
+	var SoundListTask;
+	if(Task)
 	{
-		this.initialize(id, callback);
-		this.list = list;
-	};
+		/**
+		*  A task for loading a list of sounds.. These can only
+		*  be created through Sound.instance.createPreloadTask().
+		*  @class SoundListTask
+		*  @extends {cloudkid.Task}
+		*/
+		SoundListTask = function(id, list, callback)
+		{
+			this.initialize(id, callback);
+			this.list = list;
+		};
 
-	SoundListTask.prototype = Object.create(Task.prototype);
-	SoundListTask.s = Task.prototype;
+		SoundListTask.prototype = Object.create(Task.prototype);
+		SoundListTask.s = Task.prototype;
 
-	SoundListTask.prototype.start = function(callback)
-	{
-		_instance.preload(this.list, callback);
-	};
+		SoundListTask.prototype.start = function(callback)
+		{
+			_instance.preload(this.list, callback);
+		};
 
-	SoundListTask.prototype.destroy = function()
-	{
-		SoundListTask.s.destroy.apply(this);
-		this.list = null;
-	};
+		SoundListTask.prototype.destroy = function()
+		{
+			SoundListTask.s.destroy.apply(this);
+			this.list = null;
+		};
+	}
 
 	/**
 	*  A private class that represents a sound context.

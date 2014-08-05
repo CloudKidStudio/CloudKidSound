@@ -1,0 +1,25 @@
+AddType audio/mp4 .mp4 .m4a
+AddType audio/mpeg .mp1 .mp2 .mp3 .mpg .mpeg
+AddType audio/ogg .oga .ogg
+AddType audio/x-caf .caf
+
+<FilesMatch m4a>
+Satisfy any
+order allow,deny
+allow from all
+</FilesMatch>
+<FilesMatch mp3>
+Satisfy any
+order allow,deny
+allow from all
+</FilesMatch>
+<FilesMatch oga>
+Satisfy any
+order allow,deny
+allow from all
+</FilesMatch>
+<FilesMatch caf>
+Satisfy any
+order allow,deny
+allow from all
+</FilesMatch>
