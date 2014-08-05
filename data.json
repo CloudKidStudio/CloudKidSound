@@ -103,7 +103,7 @@
             "module": "cloudkid",
             "namespace": "",
             "file": "src/Sound.js",
-            "line": 1211,
+            "line": 1207,
             "description": "A private class that represents a sound context.",
             "is_constructor": 1,
             "params": [
@@ -1162,19 +1162,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1188,
-            "description": "The list of sound aliases.",
-            "access": "public",
-            "tagname": "",
-            "itemtype": "property",
-            "name": "list The list of sound aliases to load.",
-            "type": "Array",
-            "class": "SoundListTask",
-            "module": "cloudkid"
-        },
-        {
-            "file": "src/Sound.js",
-            "line": 1219,
+            "line": 1215,
             "description": "The name of the sound context.",
             "itemtype": "property",
             "name": "id",
@@ -1186,7 +1174,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1225,
+            "line": 1221,
             "description": "The current volume to apply to all sounds in the context (0 to 1).",
             "itemtype": "property",
             "name": "volume",
@@ -1198,7 +1186,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1231,
+            "line": 1227,
             "description": "If all sounds in the sound context are muted or not.",
             "itemtype": "property",
             "name": "muted",
@@ -1210,7 +1198,7 @@
         },
         {
             "file": "src/Sound.js",
-            "line": 1237,
+            "line": 1233,
             "description": "The sound objects in this context, from Sound.instance._sounds;",
             "itemtype": "property",
             "name": "sounds",
