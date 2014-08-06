@@ -932,6 +932,7 @@
 	
 	/**
 	*	Creates a Task for the CloudKid Task library for preloading a list of sounds.
+	*	This function will not work if the Task library was not loaded before the Sound library.
 	*	@method createPreloadTask
 	*	@public
 	*	@param {String} id The id of the task.
@@ -1175,14 +1176,16 @@
 	if(Task)
 	{
 		/**
-		*  A task for loading a list of sounds.. These can only
+		*  A task for loading a list of sounds. These can only
 		*  be created through Sound.instance.createPreloadTask().
+		*  This class is not created if the Task library is not loaded before the Sound library.
 		*  @class SoundListTask
 		*  @extends {cloudkid.Task}
 		*/
 		SoundListTask = function(id, list, callback)
 		{
 			this.initialize(id, callback);
+			
 			this.list = list;
 		};
 
@@ -1600,4 +1603,5 @@
 	};
 	
 	namespace('cloudkid').VOPlayer = VOPlayer;
+	namespace('cloudkid').Sound.VOPlayer = VOPlayer;
 }());

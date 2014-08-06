@@ -359,4 +359,5 @@
 	};
 	
 	namespace('cloudkid').VOPlayer = VOPlayer;
+	namespace('cloudkid').Sound.VOPlayer = VOPlayer;
 }());

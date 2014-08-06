@@ -335,5 +335,5 @@
         this.stop(), this.audioList = null, this._listHelper = null, this._currentAudio = null, 
         this._audioInst = null, this._callback = null, this._cancelledCallback = null, this._audioListener = null, 
         this._playedAudio = null, this.captions && (this.captions.destroy(), this.captions = null);
-    }, namespace("cloudkid").VOPlayer = VOPlayer;
+    }, namespace("cloudkid").VOPlayer = VOPlayer, namespace("cloudkid").Sound.VOPlayer = VOPlayer;
 }();
