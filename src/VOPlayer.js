@@ -9,7 +9,7 @@
 	// in case these classes were included after in the load-order
 	var Sound = cloudkid.Sound,
 		Captions,
-		OS; 
+		Application; 
 
 	/**
 	*	A class for managing audio by only playing one at a time, playing a list, and even
@@ -24,7 +24,7 @@
 	{
 		// Import classes
 		Captions = cloudkid.Captions;
-		OS = cloudkid.OS;
+		Application = cloudkid.Application;
 
 		this._audioListener = this._onAudioFinished.bind(this);
 		this._update = this._update.bind(this);
@@ -183,8 +183,11 @@
 	*/
 	p._onAudioFinished = function()
 	{
-		OS.instance.removeUpdateCallback("VOPlayer");//remove any update callback
-		if(this.captions && this._audioInst)//if we have captions and an audio instance, set the caption time to the length of the audio
+		//remove any update callback
+		Application.instance.off("update", this._update);
+		Application.instance.off("update", this._updateCaptionPos);
+		//if we have captions and an audio instance, set the caption time to the length of the audio
+		if(this.captions && this._audioInst)
 			this.captions.seek(this._audioInst.length);
 		this._audioInst = null;//clear the audio instance
 		this._listCounter++;//advance list
@@ -215,7 +218,7 @@
 			{
 				this._timer = this._currentAudio;//set up a timer to wait
 				this._currentAudio = null;
-				OS.instance.addUpdateCallback("VOPlayer", this._update);
+				Application.instance.on("update", this._update);
 			}
 		}
 	};
@@ -276,7 +279,7 @@
 			this.captions.play(this._currentAudio);
 			this._timer = this.captions.currentDuration;
 			this._currentAudio = null;
-			OS.instance.addUpdateCallback("VOPlayer", this._update);
+			Application.instance.on("update", this._update);
 		}
 		else
 		{
@@ -284,7 +287,7 @@
 			if(this.captions)
 			{
 				this.captions.play(this._currentAudio);
-				OS.instance.addUpdateCallback("VOPlayer", this._updateCaptionPos);
+				Application.instance.on("update", this._updateCaptionPos);
 			}
 		}
 		for(var i = this._listCounter + 1; i < this.audioList.length; ++i)
@@ -315,7 +318,8 @@
 		}
 		if(this.captions)
 			this.captions.stop();
-		OS.instance.removeUpdateCallback("VOPlayer");
+		Application.instance.off("update", this._update);
+		Application.instance.off("update", this._updateCaptionPos);
 		this.audioList = null;
 		this._timer = 0;
 		this._callback = null;

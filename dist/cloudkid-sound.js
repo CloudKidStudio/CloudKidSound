@@ -5,7 +5,7 @@
 
 	"use strict";
 
-	var OS = cloudkid.OS,
+	var Application = cloudkid.Application,
 		MediaLoader = cloudkid.MediaLoader,
 		LoadTask = cloudkid.LoadTask,
 		Task = cloudkid.Task,
@@ -123,14 +123,16 @@
 				Debug.log("SoundJS Plugin " + createjs.Sound.activePlugin + " was not ready, waiting until it is");
 			}
 			//if the sound plugin is not ready, then just wait until it is
-			cloudkid.OS.instance.addUpdateCallback("SoundInit", function()
+			var waitFunction;
+			waitFunction = function()
 				{
 					if(createjs.Sound.getCapabilities())
 					{
-						cloudkid.OS.instance.removeUpdateCallback("SoundInit");
+						cloudkid.Application.instance.off("update", waitFunction);
 						_instance._initComplete(filetypeOrder, completeCallback);
 					}
-				});
+				};
+			cloudkid.Application.instance.on("update", waitFunction);
 		}
 		else
 			Debug.error("Unable to initialize SoundJS with a plugin!");
@@ -313,7 +315,7 @@
 		{
 			this._fades.push(inst);
 			if(this._fades.length == 1)
-				OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
+				Application.instance.on("update", this._update);
 		}
 	};
 
@@ -358,7 +360,7 @@
 		{
 			this._fades.push(inst);
 			if(this._fades.length == 1)
-				OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
+				Application.instance.on("update", this._update);
 		}
 	};
 
@@ -411,7 +413,7 @@
 		}
 		fades.length = fades.length - trim;
 		if(fades.length === 0)
-			OS.instance.removeUpdateCallback(UPDATE_ALIAS);
+			Application.instance.off("update", this._update);
 	};
 	
 	/**
@@ -1253,7 +1255,7 @@
 	// in case these classes were included after in the load-order
 	var Sound = cloudkid.Sound,
 		Captions,
-		OS; 
+		Application; 
 
 	/**
 	*	A class for managing audio by only playing one at a time, playing a list, and even
@@ -1268,7 +1270,7 @@
 	{
 		// Import classes
 		Captions = cloudkid.Captions;
-		OS = cloudkid.OS;
+		Application = cloudkid.Application;
 
 		this._audioListener = this._onAudioFinished.bind(this);
 		this._update = this._update.bind(this);
@@ -1427,8 +1429,11 @@
 	*/
 	p._onAudioFinished = function()
 	{
-		OS.instance.removeUpdateCallback("VOPlayer");//remove any update callback
-		if(this.captions && this._audioInst)//if we have captions and an audio instance, set the caption time to the length of the audio
+		//remove any update callback
+		Application.instance.off("update", this._update);
+		Application.instance.off("update", this._updateCaptionPos);
+		//if we have captions and an audio instance, set the caption time to the length of the audio
+		if(this.captions && this._audioInst)
 			this.captions.seek(this._audioInst.length);
 		this._audioInst = null;//clear the audio instance
 		this._listCounter++;//advance list
@@ -1459,7 +1464,7 @@
 			{
 				this._timer = this._currentAudio;//set up a timer to wait
 				this._currentAudio = null;
-				OS.instance.addUpdateCallback("VOPlayer", this._update);
+				Application.instance.on("update", this._update);
 			}
 		}
 	};
@@ -1520,7 +1525,7 @@
 			this.captions.play(this._currentAudio);
 			this._timer = this.captions.currentDuration;
 			this._currentAudio = null;
-			OS.instance.addUpdateCallback("VOPlayer", this._update);
+			Application.instance.on("update", this._update);
 		}
 		else
 		{
@@ -1528,7 +1533,7 @@
 			if(this.captions)
 			{
 				this.captions.play(this._currentAudio);
-				OS.instance.addUpdateCallback("VOPlayer", this._updateCaptionPos);
+				Application.instance.on("update", this._updateCaptionPos);
 			}
 		}
 		for(var i = this._listCounter + 1; i < this.audioList.length; ++i)
@@ -1559,7 +1564,8 @@
 		}
 		if(this.captions)
 			this.captions.stop();
-		OS.instance.removeUpdateCallback("VOPlayer");
+		Application.instance.off("update", this._update);
+		Application.instance.off("update", this._updateCaptionPos);
 		this.audioList = null;
 		this._timer = 0;
 		this._callback = null;

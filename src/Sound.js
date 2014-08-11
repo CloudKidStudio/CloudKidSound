@@ -5,7 +5,7 @@
 
 	"use strict";
 
-	var OS = cloudkid.OS,
+	var Application = cloudkid.Application,
 		MediaLoader = cloudkid.MediaLoader,
 		LoadTask = cloudkid.LoadTask,
 		Task = cloudkid.Task,
@@ -123,14 +123,16 @@
 				Debug.log("SoundJS Plugin " + createjs.Sound.activePlugin + " was not ready, waiting until it is");
 			}
 			//if the sound plugin is not ready, then just wait until it is
-			cloudkid.OS.instance.addUpdateCallback("SoundInit", function()
+			var waitFunction;
+			waitFunction = function()
 				{
 					if(createjs.Sound.getCapabilities())
 					{
-						cloudkid.OS.instance.removeUpdateCallback("SoundInit");
+						cloudkid.Application.instance.off("update", waitFunction);
 						_instance._initComplete(filetypeOrder, completeCallback);
 					}
-				});
+				};
+			cloudkid.Application.instance.on("update", waitFunction);
 		}
 		else
 			Debug.error("Unable to initialize SoundJS with a plugin!");
@@ -313,7 +315,7 @@
 		{
 			this._fades.push(inst);
 			if(this._fades.length == 1)
-				OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
+				Application.instance.on("update", this._update);
 		}
 	};
 
@@ -358,7 +360,7 @@
 		{
 			this._fades.push(inst);
 			if(this._fades.length == 1)
-				OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update);
+				Application.instance.on("update", this._update);
 		}
 	};
 
@@ -411,7 +413,7 @@
 		}
 		fades.length = fades.length - trim;
 		if(fades.length === 0)
-			OS.instance.removeUpdateCallback(UPDATE_ALIAS);
+			Application.instance.off("update", this._update);
 	};
 	
 	/**

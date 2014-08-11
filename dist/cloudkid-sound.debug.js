@@ -3,19 +3,23 @@
     function _playEmpty() {
         document.removeEventListener("touchstart", _playEmpty), createjs.WebAudioPlugin.playEmptySound();
     }
-    var OS = cloudkid.OS, MediaLoader = cloudkid.MediaLoader, LoadTask = cloudkid.LoadTask, Task = cloudkid.Task, TaskManager = cloudkid.TaskManager, Sound = function() {
+    var Application = cloudkid.Application, MediaLoader = cloudkid.MediaLoader, LoadTask = cloudkid.LoadTask, Task = cloudkid.Task, TaskManager = cloudkid.TaskManager, Sound = function() {
         this._sounds = {}, this._fades = [], this._contexts = {}, this._pool = [], this._update = this._update.bind(this), 
         this._markLoaded = this._markLoaded.bind(this), this._playAfterLoadBound = this._playAfterLoad.bind(this);
     }, p = Sound.prototype = {}, _instance = null;
     p._sounds = null, p._fades = null, p._pool = null, p.supportedSound = null, p._contexts = null;
-    var UNLOADED = 0, LOADING = 1, LOADED = 2, UPDATE_ALIAS = "CKSOUND";
+    var UNLOADED = 0, LOADING = 1, LOADED = 2;
     Sound.UNHANDLED = "unhandled", Sound.init = function(pluginOrder, filetypeOrder, completeCallback) {
-        return createjs.Sound.registerPlugins(pluginOrder), createjs.Sound.BrowserDetect.isIOS && document.addEventListener("touchstart", _playEmpty), 
-        _instance = new Sound(), createjs.Sound.getCapabilities() ? _instance._initComplete(filetypeOrder, completeCallback) : createjs.Sound.activePlugin ? (Debug.log("SoundJS Plugin " + createjs.Sound.activePlugin + " was not ready, waiting until it is"), 
-        cloudkid.OS.instance.addUpdateCallback("SoundInit", function() {
-            createjs.Sound.getCapabilities() && (cloudkid.OS.instance.removeUpdateCallback("SoundInit"), 
-            _instance._initComplete(filetypeOrder, completeCallback));
-        })) : Debug.error("Unable to initialize SoundJS with a plugin!"), _instance;
+        if (createjs.Sound.registerPlugins(pluginOrder), createjs.Sound.BrowserDetect.isIOS && document.addEventListener("touchstart", _playEmpty), 
+        _instance = new Sound(), createjs.Sound.getCapabilities()) _instance._initComplete(filetypeOrder, completeCallback); else if (createjs.Sound.activePlugin) {
+            Debug.log("SoundJS Plugin " + createjs.Sound.activePlugin + " was not ready, waiting until it is");
+            var waitFunction;
+            waitFunction = function() {
+                createjs.Sound.getCapabilities() && (cloudkid.Application.instance.off("update", waitFunction), 
+                _instance._initComplete(filetypeOrder, completeCallback));
+            }, cloudkid.Application.instance.on("update", waitFunction);
+        } else Debug.error("Unable to initialize SoundJS with a plugin!");
+        return _instance;
     }, p._initComplete = function(filetypeOrder, callback) {
         if (createjs.FlashPlugin && createjs.Sound.activePlugin instanceof createjs.FlashPlugin) _instance.supportedSound = ".mp3"; else for (var i = 0; i < filetypeOrder.length; ++i) {
             var type = filetypeOrder[i];
@@ -70,7 +74,7 @@
             inst._fTime = 0, inst._fDur = duration > 0 ? duration : 500;
             var v = startVol > 0 ? startVol : 0;
             inst._channel.setVolume(v), inst.curVol = inst._fStart = v, inst._fEnd = targetVol || sound.volume, 
-            -1 == this._fades.indexOf(inst) && (this._fades.push(inst), 1 == this._fades.length && OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update));
+            -1 == this._fades.indexOf(inst) && (this._fades.push(inst), 1 == this._fades.length && Application.instance.on("update", this._update));
         }
     }, p.fadeOut = function(aliasOrInst, duration, targetVol, startVol) {
         var sound, inst;
@@ -81,7 +85,7 @@
         inst && inst._channel && (inst._fTime = 0, inst._fDur = duration > 0 ? duration : 500, 
         startVol > 0 ? (inst._channel.setVolume(startVol), inst._fStart = startVol) : inst._fStart = inst._channel.getVolume(), 
         inst.curVol = inst._fStart, inst._fEnd = targetVol || 0, -1 == this._fades.indexOf(inst) && (this._fades.push(inst), 
-        1 == this._fades.length && OS.instance.addUpdateCallback(UPDATE_ALIAS, this._update)));
+        1 == this._fades.length && Application.instance.on("update", this._update)));
     }, p._update = function(elapsed) {
         for (var fades = this._fades, trim = 0, i = fades.length - 1; i >= 0; --i) {
             var inst = fades[i];
@@ -102,7 +106,7 @@
                 }
             }
         }
-        fades.length = fades.length - trim, 0 === fades.length && OS.instance.removeUpdateCallback(UPDATE_ALIAS);
+        fades.length = fades.length - trim, 0 === fades.length && Application.instance.off("update", this._update);
     }, p.play = function(alias, completeCallback, startCallback, interrupt, delay, offset, loop, volume, pan) {
         if (loop === !0 && (loop = -1), completeCallback == Sound.UNHANDLED) return createjs.Sound.play(alias, interrupt, delay, offset, loop, volume, pan);
         var sound = this._sounds[alias];
@@ -279,8 +283,8 @@
     SoundContext.prototype = {}, namespace("cloudkid").Sound = Sound;
 }(), function() {
     "use strict";
-    var Captions, OS, Sound = cloudkid.Sound, VOPlayer = function(useCaptions) {
-        Captions = cloudkid.Captions, OS = cloudkid.OS, this._audioListener = this._onAudioFinished.bind(this), 
+    var Captions, Application, Sound = cloudkid.Sound, VOPlayer = function(useCaptions) {
+        Captions = cloudkid.Captions, Application = cloudkid.Application, this._audioListener = this._onAudioFinished.bind(this), 
         this._update = this._update.bind(this), this._updateCaptionPos = this._updateCaptionPos.bind(this), 
         useCaptions && (this.captions = useCaptions instanceof Captions ? useCaptions : new Captions(), 
         this.captions.isSlave = !0), this._listHelper = [];
@@ -298,14 +302,15 @@
         this.stop(), this._listCounter = -1, this.audioList = list, this._callback = callback, 
         this._cancelledCallback = cancelledCallback, this._onAudioFinished();
     }, p._onAudioFinished = function() {
-        if (OS.instance.removeUpdateCallback("VOPlayer"), this.captions && this._audioInst && this.captions.seek(this._audioInst.length), 
+        if (Application.instance.off("update", this._update), Application.instance.off("update", this._updateCaptionPos), 
+        this.captions && this._audioInst && this.captions.seek(this._audioInst.length), 
         this._audioInst = null, this._listCounter++, this._listCounter >= this.audioList.length) {
             this.captions && this.captions.stop(), this._currentAudio = null, this._cancelledCallback = null;
             var c = this._callback;
             this._callback = null, c && c();
         } else this._currentAudio = this.audioList[this._listCounter], "string" == typeof this._currentAudio ? this._playAudio() : "function" == typeof this._currentAudio ? (this._currentAudio(), 
         this._onAudioFinished()) : (this._timer = this._currentAudio, this._currentAudio = null, 
-        OS.instance.addUpdateCallback("VOPlayer", this._update));
+        Application.instance.on("update", this._update));
     }, p._update = function(elapsed) {
         this.captions && this.captions.updateTime(elapsed), this._timer -= elapsed, this._timer <= 0 && this._onAudioFinished();
     }, p._updateCaptionPos = function() {
@@ -314,8 +319,8 @@
         this.trackAudio && (this._playedAudio ? -1 == this._playedAudio.indexOf(this._currentAudio) && this._playedAudio.push(this._currentAudio) : this._playedAudio = [ this._currentAudio ]);
         var s = Sound.instance;
         !s.exists(this._currentAudio) && this.captions && this.captions.hasCaption(this._currentAudio) ? (this.captions.play(this._currentAudio), 
-        this._timer = this.captions.currentDuration, this._currentAudio = null, OS.instance.addUpdateCallback("VOPlayer", this._update)) : (this._audioInst = s.play(this._currentAudio, this._audioListener), 
-        this.captions && (this.captions.play(this._currentAudio), OS.instance.addUpdateCallback("VOPlayer", this._updateCaptionPos)));
+        this._timer = this.captions.currentDuration, this._currentAudio = null, Application.instance.on("update", this._update)) : (this._audioInst = s.play(this._currentAudio, this._audioListener), 
+        this.captions && (this.captions.play(this._currentAudio), Application.instance.on("update", this._updateCaptionPos)));
         for (var i = this._listCounter + 1; i < this.audioList.length; ++i) {
             var next = this.audioList[i];
             if ("string" == typeof next) {
@@ -325,8 +330,9 @@
         }
     }, p.stop = function() {
         this._currentAudio && (Sound.instance.stop(this._currentAudio), this._currentAudio = null), 
-        this.captions && this.captions.stop(), OS.instance.removeUpdateCallback("VOPlayer"), 
-        this.audioList = null, this._timer = 0, this._callback = null;
+        this.captions && this.captions.stop(), Application.instance.off("update", this._update), 
+        Application.instance.off("update", this._updateCaptionPos), this.audioList = null, 
+        this._timer = 0, this._callback = null;
         var c = this._cancelledCallback;
         this._cancelledCallback = null, c && c();
     }, p.unloadPlayedAudio = function() {
