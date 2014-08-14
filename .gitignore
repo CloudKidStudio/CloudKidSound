@@ -1,2 +1,4 @@
-/docs/*
-/example/libs/*
+docs
+example/libs
+node_modules
+.grunt
