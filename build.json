@@ -1,6 +1,6 @@
 {
 	"name" : "CloudKidSound",
-	"version" : "3.0.0",
+	"version" : "3.0.1",
 	"description" : "A framework for Web Audio/Flash audio content built on top of CreateJS - SoundJS",
 	"url" : "http://github.com/CloudKidStudio/CloudKidSound",
 	"output" : "cloudkid-sound",

@@ -200,7 +200,7 @@
 			var s = list[i];
 			var temp = this._sounds[s.id] = {
 				id: s.id,
-				src: path + s.src + this.supportedSound,
+				src: path + (s.src ? s.src : s.id) + this.supportedSound,
 				volume: s.volume ? s.volume : 1,
 				state: UNLOADED,
 				playing: [],
