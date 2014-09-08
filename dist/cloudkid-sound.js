@@ -1,4 +1,4 @@
-/*! CloudKidSound 3.0.0 */
+/*! CloudKidSound 3.0.1 */
 /**
 *  @module cloudkid
 */
