@@ -198,6 +198,9 @@
 		for(var i = 0, len = list.length; i < len; ++i)
 		{
 			var s = list[i];
+			if (typeof s == "string") {
+				s = {id: s};
+			}
 			var temp = this._sounds[s.id] = {
 				id: s.id,
 				src: path + (s.src ? s.src : s.id) + this.supportedSound,
